@@ -4,6 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:COSC2100_A2_MaxDinsmore"
-             mc:Ignorable="d" Height="1125" Width="1100">
-    <Image Margin="112,179,239,199" Source="/Assets/tictactoeGrid.png" Visibility="Visible"/>
+             mc:Ignorable="d" Height="168" Width="168">
+    <Image Source="C:\Users\A3lin\Documents\GitHub\COSC2100_A2_MaxDinsmore\COSC2100_A2_MaxDinsmore\Assets\tictactoeGrid.png" Visibility="Visible" Stretch="None" Height="168" Width="168"/>
 </UserControl>

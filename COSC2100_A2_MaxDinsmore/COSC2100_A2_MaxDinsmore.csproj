@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Player.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Assets\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Player.cs" />
   </ItemGroup>
 
 </Project>
