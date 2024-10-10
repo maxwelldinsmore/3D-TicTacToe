@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace COSC2100_A2_MaxDinsmore
 {
-    internal class Player(string name, string colour)
+    class Functions
     {
-        string playerName = name;
-        string playerColour = colour;
+        // Function to check if user won after they placed piece
 
-        
-        
+
     }
-
 }

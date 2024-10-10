@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:COSC2100_A2_MaxDinsmore"
+        xmlns:control="clr-namespace:COSC2100_A2_MaxDinsmore"
+
         mc:Ignorable="d"
         Title="TicTacToe" Height="553" Width="792">
-    <Grid Margin="0,0,0,1">
+
+    <Grid Margin="0,0,0,1" RenderTransformOrigin="0.529,0.503">
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40*"/>
             <ColumnDefinition Width="43*"/>
@@ -15,8 +19,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="179"/>
             <RowDefinition Height="192"/>
-            <RowDefinition Height="298"/>
-        </Grid.RowDefinitions>
 
+            <RowDefinition Height="298"/>
+
+        </Grid.RowDefinitions>
+        <Label Grid.Column="2" Content="Tic Tac Toe" HorizontalAlignment="Left" Margin="94,64,0,0" VerticalAlignment="Top"/>
+        <local:Tile Visibility="Visible" Margin="93,164,183,10" Grid.RowSpan="2" Grid.ColumnSpan="2" />
     </Grid>
 </Window>
