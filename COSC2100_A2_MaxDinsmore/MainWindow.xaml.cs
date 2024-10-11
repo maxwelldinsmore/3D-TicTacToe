@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace COSC2100_A2_MaxDinsmore
 {
@@ -23,6 +25,12 @@ namespace COSC2100_A2_MaxDinsmore
         int gridSize;
         public int playersTurn = 1;
         Player[] players;
+        public Tile[] tiles;
+        //public Image[] rings;
+        public int playerCount;
+        System.Windows.Controls.Label playerTurnLabel;
+        
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -53,16 +61,19 @@ namespace COSC2100_A2_MaxDinsmore
             
         }
 
+
+
+
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
-            int playerCount = 0;
+            playerCount = 0;
             int.TryParse(this.playerCountTextBox.Text, out playerCount);
             if (playerCount < 2 && playerCount > 4)
             {
                 MessageBox.Show("Error invalid amount of players!");
                 return;
             }
-            Player[] players = new Player[playerCount];
+            players = new Player[playerCount];
             for (int i = 0; i < playerCount; i++)
             {
                 players[i] = new Player(i);
@@ -79,12 +90,42 @@ namespace COSC2100_A2_MaxDinsmore
             this.Width = gridSize * 168 + 400;
             this.Height = gridSize * 168 + 40;
 
+            //rings = new Image[3*playerCount];
+            //for (int z = 0; z < playerCount; z++)
+            //{
+            //    // Image source is referenced from miscrosoft documentation
+            //    // Need to convert to get image source
+            //    // https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.image.source?view=windowsdesktop-8.0
 
+            //    for (int y=0;y<3;y++)
+            //    {
+            //        BitmapImage bitmap = new BitmapImage();
+            //        bitmap.BeginInit();
+            //        bitmap.UriSource = new Uri(players[playersTurn - 1].getRing(z), UriKind.Relative);
+            //        bitmap.EndInit();
+
+
+            //        rings[y + z * playerCount] = new Image()
+            //        {
+            //            HorizontalAlignment = 0,
+            //            VerticalAlignment = 0,
+            //            Source = bitmap,
+            //            Width = 168,
+            //            Height = 168,
+            //            Visibility = Visibility.Hidden
+
+            //        };
+            ////        grid.Children.Add(rings[y + z * playerCount]);
+            //    }
+                
+
+                
+            //}
 
             // Thickness referenced from stack overflow
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
 
-            Tile[] tiles = new Tile[gridSize * gridSize];
+            tiles = new Tile[gridSize * gridSize];
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
@@ -106,7 +147,7 @@ namespace COSC2100_A2_MaxDinsmore
 
                 }
             }
-            Label playerTurnLabel = new Label
+            playerTurnLabel = new System.Windows.Controls.Label
             {
                 HorizontalAlignment = 0,
                 VerticalAlignment = 0,
@@ -118,41 +159,122 @@ namespace COSC2100_A2_MaxDinsmore
             grid.Children.Add(playerTurnLabel);
 
 
-            //gameRun(tiles);
-        }
 
-        // Need a way to check if a piece has been updated
-        private void gameRun(Tile[] tiles)
-        {
-            //while (true)
-            //{
-            //    System.Threading.Thread.Sleep(10);
-            //    for (int gridCount  = 0; gridCount < gridSize * gridSize; gridCount++)
-            //    {
-            //        checkTileInfo(tiles[gridCount]);\\
-            //    }
-            //    
-            //}
-        }
+            // Threads referenced from
+            // https://www.c-sharpcorner.com/UploadFile/1c8574/threads-in-wpf/
+            Thread thread = new Thread(new ThreadStart(gameRun));
+            thread.SetApartmentState(ApartmentState.STA);
 
-        private Boolean checkTileInfo(Tile tile)
+            thread.Start();
+        }
+   
+
+
+
+
+
+        private void gameRun()
         {
-            for (int i = 0; i <= 3; i++)
+            
+            bool successfulHit = false;
+            while (true)
             {
+
+                Thread.Sleep(100);
+                for (int gridCount = 0; gridCount < gridSize * gridSize; gridCount++)
+                {
+                    successfulHit = checkTileInfo(tiles[gridCount]);
+                    
+                }
+
+            }
+        }
+
+        private void nextTurn()
+        {
+            if (playersTurn < playerCount)
+            {
+                playersTurn++;
+            } else
+            {
+                playersTurn = 1;
+            }
+
+            try
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    playerTurnLabel.Content = $"Player {playersTurn}'s Turn";
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating UI: {ex.Message}");
+            }
+
+        }
+
+
+
+        private bool checkTileInfo(Tile tile)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                // Negative 1 means tile was just clicked
                 if (tile.circles[i] == -1)
                 {
-                    // Image source is referenced from miscrosoft documentation
-                    // Need to convert to other types
-                    Image ring = new Image()
+                    // Load copy of circle
+                    Dispatcher.Invoke(() =>
                     {
-                        // Source = players[playersTurn].images[1],
-                        Width = 168,
-                        Height = 168,
+                        
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.UriSource = new Uri(players[playersTurn - 1].getRing(i), UriKind.Relative);
+                        bitmap.EndInit();
 
+                        Image ring = new Image()
+                        {
+                            HorizontalAlignment = 0,
+                            VerticalAlignment = 0,
+                            Source = bitmap,
+                            Visibility = Visibility.Visible,
+                            Margin = tile.Margin,
+                            IsHitTestVisible = false,
 
-                    };
-                    grid.Children.Add(ring);
+                        };
+                        int scale = 0;
+                        if (i == 0)
+                        {
+                            scale = 78;
+                            ring.Margin = new Thickness(tile.Margin.Left+ 50, tile.Margin.Top + 50 , 0, 0);
+
+                        }
+                        else if (i == 1)
+                        {
+                            scale = 120;
+                            ring.Margin = new Thickness(tile.Margin.Left + 20 , tile.Margin.Top + 20, 0, 0);
+
+                        }
+                        else
+                        {
+                            scale = 158;
+                            ring.Margin = new Thickness(tile.Margin.Left + 5, tile.Margin.Top + 5, 0, 0);
+
+                        }
+                        ring.Height = scale;
+                        ring.Width = scale;
+                        grid.Children.Add(ring);
+                        //grid.Children.Remove(tile);
+                        //MessageBox.Show(tile.circles[i].ToString());
+                        tile.circles[i] = playersTurn;
+                        //MessageBox.Show(tile.circles[i].ToString());
+
+                    });
                     
+
+                    // tile ring is now marked as clicked by player
+                    
+                    nextTurn();
                 }
             }
             return false;
