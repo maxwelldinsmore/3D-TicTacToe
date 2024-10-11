@@ -21,6 +21,8 @@ namespace COSC2100_A2_MaxDinsmore
     {
         // variables
         int gridSize;
+        public int playersTurn = 1;
+        Player[] players;
         public MainWindow()
         {
             InitializeComponent();
@@ -53,14 +55,18 @@ namespace COSC2100_A2_MaxDinsmore
 
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
-            int players = 0;
-            int.TryParse(this.playerCountTextBox.Text, out players);
-            if (players < 2 && players > 4)
+            int playerCount = 0;
+            int.TryParse(this.playerCountTextBox.Text, out playerCount);
+            if (playerCount < 2 && playerCount > 4)
             {
                 MessageBox.Show("Error invalid amount of players!");
                 return;
             }
-
+            Player[] players = new Player[playerCount];
+            for (int i = 0; i < playerCount; i++)
+            {
+                players[i] = new Player(i);
+            }
 
             hideMenuItems();
             if (this._4SizeRadioButton.IsChecked == true)
@@ -73,20 +79,21 @@ namespace COSC2100_A2_MaxDinsmore
             this.Width = gridSize * 168 + 400;
             this.Height = gridSize * 168 + 40;
 
-            
+
 
             // Thickness referenced from stack overflow
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
-            
+
+            Tile[] tiles = new Tile[gridSize * gridSize];
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
                 {
 
-                    Tile tile = new Tile
+                    tiles[j + gridSize * i] = new Tile
                     {
                         Margin = new Thickness(j * 168, i * 168, 0, 0),
-                        Name = "tile" + (i),
+                        Name = "tile" + (j + gridSize * i),
                         Visibility = Visibility.Visible,
                         Height = 168,
                         Width = 168,
@@ -95,13 +102,62 @@ namespace COSC2100_A2_MaxDinsmore
                     };
 
                     // Add the tile to the grid
-                    grid.Children.Add(tile);
+                    grid.Children.Add(tiles[j + gridSize * i]);
 
                 }
             }
+            Label playerTurnLabel = new Label
+            {
+                HorizontalAlignment = 0,
+                VerticalAlignment = 0,
+                Margin = new Thickness(700, 20, 0, 0),
+                Height = 40,
+                Width = 100,
+                Content = "Player 1's Turn",
+            };
+            grid.Children.Add(playerTurnLabel);
+
+
+            //gameRun(tiles);
         }
 
+        // Need a way to check if a piece has been updated
+        private void gameRun(Tile[] tiles)
+        {
+            //while (true)
+            //{
+            //    System.Threading.Thread.Sleep(10);
+            //    for (int gridCount  = 0; gridCount < gridSize * gridSize; gridCount++)
+            //    {
+            //        checkTileInfo(tiles[gridCount]);\\
+            //    }
+            //    
+            //}
+        }
 
+        private Boolean checkTileInfo(Tile tile)
+        {
+            for (int i = 0; i <= 3; i++)
+            {
+                if (tile.circles[i] == -1)
+                {
+                    // Image source is referenced from miscrosoft documentation
+                    // Need to convert to other types
+                    Image ring = new Image()
+                    {
+                        // Source = players[playersTurn].images[1],
+                        Width = 168,
+                        Height = 168,
+
+
+                    };
+                    grid.Children.Add(ring);
+                    
+                }
+            }
+            return false;
+        }
+        
 
     }
 }

@@ -9,15 +9,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Player.cs" />
+    <None Remove="Assets\blueRing1.png" />
+    <None Remove="Assets\blueRing2.png" />
+    <None Remove="Assets\blueRing3.png" />
+    <None Remove="Assets\greenRing1.png" />
+    <None Remove="Assets\greenRing2.png" />
+    <None Remove="Assets\greenRing3.png" />
+    <None Remove="Assets\pegPiece.png" />
+    <None Remove="Assets\purpleRing1.png" />
+    <None Remove="Assets\purpleRing2.png" />
+    <None Remove="Assets\purpleRing3.png" />
+    <None Remove="Assets\redRing1.png" />
+    <None Remove="Assets\redRing2.png" />
+    <None Remove="Assets\redRing3.png" />
+    <None Remove="Assets\tictactoeGrid.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Player.cs" />
+    <Resource Include="Assets\blueRing1.png" />
+    <Resource Include="Assets\blueRing2.png" />
+    <Resource Include="Assets\blueRing3.png" />
+    <Resource Include="Assets\greenRing1.png" />
+    <Resource Include="Assets\greenRing2.png" />
+    <Resource Include="Assets\greenRing3.png" />
+    <Resource Include="Assets\pegPiece.png" />
+    <Resource Include="Assets\purpleRing1.png" />
+    <Resource Include="Assets\purpleRing2.png" />
+    <Resource Include="Assets\purpleRing3.png" />
+    <Resource Include="Assets\redRing1.png" />
+    <Resource Include="Assets\redRing2.png" />
+    <Resource Include="Assets\redRing3.png" />
+    <Resource Include="Assets\tictactoeGrid.png" />
   </ItemGroup>
 
 </Project>
