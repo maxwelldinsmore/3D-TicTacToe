@@ -18,28 +18,32 @@ namespace COSC2100_A2_MaxDinsmore
             if (playerNumber == 1)
             {
                 this.colour = "red";
-                images = ["/Assets/redRing1", "/Assets/redRing2", "/Assets/redRing3"];
+                images = ["/Assets/redRing1.png", "/Assets/redRing2.png", "/Assets/redRing3.png"];
             }
             else if (playerNumber == 2)
             {
                 this.colour = "purple";
-                images = ["/Assets/purpleRing1", "/Assets/purpleRing2", "/Assets/purpleRing3"];
+                images = ["/Assets/purpleRing1.png", "/Assets/purpleRing2.png", "/Assets/purpleRing3.png"];
             }
             else if (playerNumber == 3)
             {
                 this.colour = "blue";
-                images = ["/Assets/blueRing1", "/Assets/blueRing2", "/Assets/blueRing3"];
+                images = ["/Assets/blueRing1.png", "/Assets/blueRing2.png", "/Assets/blueRing3.png"];
             }
             else
             {
                 this.colour = "green";
-                images = ["/Assets/greenRing1", "/Assets/greenRing2", "/Assets/greenRing3"];
+                images = ["/Assets/greenRing1.png", "/Assets/greenRing2.png", "/Assets/greenRing3.png"];
             }
 
 
 
         }
 
+        public string getRing(int size) 
+        { 
+        return images[size];
+        }
 
 
 
