@@ -46,17 +46,27 @@ namespace COSC2100_A2_MaxDinsmore
             
             if (distanceFromCenter >= 27 && distanceFromCenter <= 43)
             {
-                MessageBox.Show("Ring 1!");
-                circles[1] = -1;
+                //MessageBox.Show("Ring 1!");
+                if (circles[0] == 0 )
+                {
+                    circles[0] = -1;
+                }
+                
                 
             } else if (distanceFromCenter >= 46 && distanceFromCenter <= 61)
             {
-                MessageBox.Show("Ring 2!");
-                circles[2] = -1;
+                //MessageBox.Show("Ring 2!");
+                if (circles[1] == 0)
+                {
+                    circles[1] = -1;
+                }
             } else if (distanceFromCenter >= 65 && distanceFromCenter <= 79)
             {
-                MessageBox.Show("Ring 3!");
-                circles[3] = -1;
+                //MessageBox.Show("Ring 3!");
+                if (circles[2] == 0)
+                {
+                    circles[2] = -1;
+                }
             }
             
         }

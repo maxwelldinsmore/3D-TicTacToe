@@ -9,8 +9,8 @@ namespace COSC2100_A2_MaxDinsmore
 
     public class Player
     {
-        public string colour = "";
-        public string[] images;
+        private string colour = "";
+        private string[] images;
         public Player() { }
         public Player(int playerNumber)
         {
