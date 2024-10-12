@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using static COSC2100_A2_MaxDinsmore.Functions;
 
 namespace COSC2100_A2_MaxDinsmore
 {
@@ -28,6 +29,7 @@ namespace COSC2100_A2_MaxDinsmore
         public Tile[] tiles;
         //public Image[] rings;
         public int playerCount;
+        public int[] lastAccessedPiece;
         System.Windows.Controls.Label playerTurnLabel;
         
         
@@ -61,9 +63,7 @@ namespace COSC2100_A2_MaxDinsmore
             
         }
 
-
-
-
+ 
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
             playerCount = 0;
@@ -90,51 +90,19 @@ namespace COSC2100_A2_MaxDinsmore
             this.Width = gridSize * 168 + 400;
             this.Height = gridSize * 168 + 40;
 
-            //rings = new Image[3*playerCount];
-            //for (int z = 0; z < playerCount; z++)
-            //{
-            //    // Image source is referenced from miscrosoft documentation
-            //    // Need to convert to get image source
-            //    // https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.image.source?view=windowsdesktop-8.0
-
-            //    for (int y=0;y<3;y++)
-            //    {
-            //        BitmapImage bitmap = new BitmapImage();
-            //        bitmap.BeginInit();
-            //        bitmap.UriSource = new Uri(players[playersTurn - 1].getRing(z), UriKind.Relative);
-            //        bitmap.EndInit();
-
-
-            //        rings[y + z * playerCount] = new Image()
-            //        {
-            //            HorizontalAlignment = 0,
-            //            VerticalAlignment = 0,
-            //            Source = bitmap,
-            //            Width = 168,
-            //            Height = 168,
-            //            Visibility = Visibility.Hidden
-
-            //        };
-            ////        grid.Children.Add(rings[y + z * playerCount]);
-            //    }
-                
-
-                
-            //}
-
             // Thickness referenced from stack overflow
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
 
             tiles = new Tile[gridSize * gridSize];
-            for (int i = 0; i < gridSize; i++)
+            for (int x = 0; x < gridSize; x++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int y = 0; y < gridSize; y++)
                 {
 
-                    tiles[j + gridSize * i] = new Tile
+                    tiles[x + y * gridSize] = new Tile
                     {
-                        Margin = new Thickness(j * 168, i * 168, 0, 0),
-                        Name = "tile" + (j + gridSize * i),
+                        Margin = new Thickness(y * 168, x * 168, 0, 0),
+                        Name = "tile" + (x + y * gridSize),
                         Visibility = Visibility.Visible,
                         Height = 168,
                         Width = 168,
@@ -143,7 +111,7 @@ namespace COSC2100_A2_MaxDinsmore
                     };
 
                     // Add the tile to the grid
-                    grid.Children.Add(tiles[j + gridSize * i]);
+                    grid.Children.Add(tiles[x + y * gridSize]);
 
                 }
             }
@@ -181,10 +149,13 @@ namespace COSC2100_A2_MaxDinsmore
             {
 
                 Thread.Sleep(100);
-                for (int gridCount = 0; gridCount < gridSize * gridSize; gridCount++)
+                for (int x = 0; x < gridSize; x++)
                 {
-                    successfulHit = checkTileInfo(tiles[gridCount]);
-                    
+                    for (int y = 0; y < gridSize; y++)
+                    {
+                        lastAccessedPiece = [x, y, -1];
+                        successfulHit = checkTileInfo(tiles[x + y * gridSize]);
+                    }
                 }
 
             }
@@ -221,8 +192,9 @@ namespace COSC2100_A2_MaxDinsmore
             for (int i = 0; i < 3; i++)
             {
                 // Negative 1 means tile was just clicked
-                if (tile.circles[i] == -1)
+                if (tile.getRingValue(i) == -1)
                 {
+                    lastAccessedPiece[2] = i;
                     // Load copy of circle
                     Dispatcher.Invoke(() =>
                     {
@@ -242,38 +214,54 @@ namespace COSC2100_A2_MaxDinsmore
                             IsHitTestVisible = false,
 
                         };
-                        int scale = 0;
+                        double scale = 0;
                         if (i == 0)
                         {
-                            scale = 78;
-                            ring.Margin = new Thickness(tile.Margin.Left+ 50, tile.Margin.Top + 50 , 0, 0);
+                            scale = 83;
+                            ring.Margin = new Thickness(tile.Margin.Left+ 43, tile.Margin.Top + 43 , 0, 0);
 
                         }
                         else if (i == 1)
                         {
-                            scale = 120;
-                            ring.Margin = new Thickness(tile.Margin.Left + 20 , tile.Margin.Top + 20, 0, 0);
+                            scale = 123;
+                            ring.Margin = new Thickness(tile.Margin.Left + 23 , tile.Margin.Top + 23, 0, 0);
 
                         }
                         else
                         {
-                            scale = 158;
-                            ring.Margin = new Thickness(tile.Margin.Left + 5, tile.Margin.Top + 5, 0, 0);
+                            scale = 157.5;
+                            ring.Margin = new Thickness(tile.Margin.Left + 5.9, tile.Margin.Top + 5.9, 0, 0);
 
                         }
                         ring.Height = scale;
                         ring.Width = scale;
                         grid.Children.Add(ring);
-                        //grid.Children.Remove(tile);
-                        //MessageBox.Show(tile.circles[i].ToString());
-                        tile.circles[i] = playersTurn;
-                        //MessageBox.Show(tile.circles[i].ToString());
+                        tile.setRingValue(i, playersTurn);
 
                     });
-                    
-
                     // tile ring is now marked as clicked by player
-                    
+
+
+                    int[][] check = checkForWin(tiles, gridSize, lastAccessedPiece);
+                    if (check[0][0].ToString() != "-1")
+                    {
+                        // Message Box For Debugging
+                        try
+                        {
+                            MessageBox.Show("Player " + playersTurn.ToString() + " Won at tiles [" 
+                                + check[0][0].ToString() + ", " + check[0][1].ToString() + ", " +  check[0][2].ToString() + "], [" +
+                                check[1][0].ToString() + ", " + check[1][1].ToString() + ", " + check[1][2].ToString() + "], [" +
+                                check[2][0].ToString() + ", " + check[2][1].ToString() + ", " + check[2][2].ToString() + "]" );
+
+                        } catch
+                        {
+                            MessageBox.Show("Error win is false");
+                        }
+                        
+                        //MessageBox.Show("player won!");
+                    }
+                    MessageBox.Show(check[0][0].ToString());
+                    //Checks if player won
                     nextTurn();
                 }
             }
