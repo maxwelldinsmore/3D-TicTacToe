@@ -39,27 +39,22 @@ namespace COSC2100_A2_MaxDinsmore
 
             // 3D orthogonal Check
             if (check[0][0] != checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
-            {
-                MessageBox.Show("X won");
-                MessageBox.Show(" ["
-                                + placedPiece[0].ToString() + ", " + placedPiece[1].ToString() + ", " + placedPiece[2].ToString() + "]");
-                
+            {  
                 return checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
-
             if (check[0][0] != checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
-                MessageBox.Show("Y won");
                 return checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
-
             if (check[0][0] != checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
-                MessageBox.Show("Z won");
                 return checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
             // 2D diagonal Checks
-
+            if (check[0][0] != checkFor2DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
+            {
+                return checkFor2DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+            }
 
 
             // 3D Diagonal Checks
@@ -77,7 +72,6 @@ namespace COSC2100_A2_MaxDinsmore
                 if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 1) &&
                     tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 2))
                 {
-                    MessageBox.Show(tiles[x + y * gridSize].getRingValue(z).ToString());
                     return [[x, y, z], [x, y, z - 1], [x, y, z -2]];
                     
                 }
@@ -166,7 +160,6 @@ namespace COSC2100_A2_MaxDinsmore
                 if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z) &&
                     tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z))
                 {
-                    MessageBox.Show(tiles[x + y * gridSize].getRingValue(z).ToString());
                     return [[x - 1, y, z], [x, y, z], [x + 1, y, z]];
                 }
             }
@@ -175,52 +168,160 @@ namespace COSC2100_A2_MaxDinsmore
             return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
 
+        private static int[][] checkFor2DDiagonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
+        {
+            // Need +/+, +/-, -/+, -/- and 3 different times for YZ, ZX, YX
+            // So can generalize the Axis change and then run 3 times for the different combinations
+            // i.e. for loop the specifies combination change, and four if statements handling directions.
+            int[] axisMovement = [0, 0, 0];
+            int[][] twoDimensionalCheck;
+            // I and J are representative of ++, +-.. Change
+            // if i = 0 change is negative, 
+            for (int i = -1; i < 1; i++)
+            {
+                for (int j = -1; j < 1; j++)
+                {
+                    twoDimensionalCheck = checkFor2DAxisNonSpecific(tiles, x, y,  z, gridSize, axisMovement[0], axisMovement[1], axisMovement[2]);
+                }
+            }
 
+            for (int axisChange = 0; axisChange < 4; axisChange++)
+            {
+                if (axisChange == 0)
+                {
+                    
+                }
+
+
+            }
+
+
+            // How do we generalize this
+            // X & Y 
+            //
+            // Positive Change X and Y
+            //try
+            //{
+            //    if (
+            //}
+            //catch { }
+
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+        }
+
+
+
+        private static int[][] checkFor2DAxisNonSpecific(Tile[] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
+        {
+            // X & Y 
+            //
+            // Positive Change X and Y
+            try
+            {
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + (y + 1) * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + (y + 2) * gridSize].getRingValue(z))
+                {
+                    return [[x, y, z], [x + 1, y + 1, z], [x + 2, y + 2, z]];
+                }
+            }
+            catch { }
+
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+        }
+
+        private static int[][] checkFor3DDiagonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
+        {
+
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+        }
     }
+
+
+
 }
 
-// Spare code for more complicated way to solve
-
-//for (int x = 0; x < gridSize; x++)
+//// Negative Change X and Y
+//try
 //{
-//    for (int y = 0; y < gridSize; y++)
-//    {       
-//        for (int z = 0; z < AmountOfRings; z++)
-//        {   // IF Y == Z specific checks
-//            if (z == y && tiles[x + y * gridSize].getRingValue(z) != 0)
-//            { // Checks for win in Z direction
-//                if (check != checkForZOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForZOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//                if (check != checkForYOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForYOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//            }
-//            if (y == x && tiles[x + y * gridSize].getRingValue(z) != 0)
-//            {
-//                if (check != checkForXOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForXOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//                if (check != checkForYOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForYOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//            }
-//            if (z == x && tiles[x + y * gridSize].getRingValue(z) != 0)
-//            {
-//                if (check != checkForXOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForXOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//                if (check != checkForZOrthogonalWin(tiles, x, y, z, gridSize))
-//                {
-//                    return checkForZOrthogonalWin(tiles, x, y, z, gridSize);
-//                }
-//            }
-//        }
-
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + (y - 1) * gridSize].getRingValue(z) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + (y - 2) * gridSize].getRingValue(z))
+//    {
+//        return [[x, y, z], [x - 1, y - 1, z], [x - 2, y - 2, z]];
 //    }
 //}
+//catch { }
+//// +1,-1 Change X and Y
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + (y - 1) * gridSize].getRingValue(z) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + (y + 1) * gridSize].getRingValue(z))
+//    {
+//        return [[x - 1, y - 1, z], [x, y, z], [x + 1, y + 1, z]];
+//    }
+//}
+//catch { }
+
+//// Z & Y 
+////
+//// Positive Change Z and Y
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z + 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 2) * gridSize].getRingValue(z + 2))
+//    {
+//        return [[x, y, z], [x, y + 1, z + 1], [x, y + 2, z + 2]];
+//    }
+//}
+//catch { }
+//// Negative Change Z and Y
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z - 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 2) * gridSize].getRingValue(z - 2))
+//    {
+//        return [[x, y, z], [x, y - 1, z - 1], [x, y - 2, z - 2]];
+//    }
+//}
+//catch { }
+//// +1,-1 Change Z and Y
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z - 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z + 1))
+//    {
+//        return [[x, y - 1, z - 1], [x, y, z], [x, y + 1, z + 1]];
+//    }
+//}
+//catch { }
+//// Z & X 
+////
+//// Positive Change Z and X
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z + 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + y * gridSize].getRingValue(z + 2))
+//    {
+//        return [[x, y, z], [x + 1, y, z + 1], [x + 2, y, z + 2]];
+//    }
+//}
+//catch { }
+//// Negative Change Z and X
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z - 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + y * gridSize].getRingValue(z - 2))
+//    {
+//        return [[x, y, z], [x - 1, y, z - 1], [x - 2, y, z - 2]];
+//    }
+//}
+//catch { }
+//// +1,-1 Change Z and X
+//try
+//{
+//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z - 1) &&
+//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z + 1))
+//    {
+//        return [[x - 1, y, z - 1], [x, y, z], [x - 1, y, z + 1]];
+//    }
+//}
+//catch { }
