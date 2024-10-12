@@ -58,7 +58,10 @@ namespace COSC2100_A2_MaxDinsmore
 
 
             // 3D Diagonal Checks
-
+            if (check[0][0] != checkFor3DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
+            {
+                return checkFor3DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+            }
 
 
             // No one won
@@ -173,55 +176,76 @@ namespace COSC2100_A2_MaxDinsmore
             // Need +/+, +/-, -/+, -/- and 3 different times for YZ, ZX, YX
             // So can generalize the Axis change and then run 3 times for the different combinations
             // i.e. for loop the specifies combination change, and four if statements handling directions.
-            int[] axisMovement = [0, 0, 0];
+            int[] axisMovement = [1, 1, 0];
             int[][] twoDimensionalCheck;
             // I and J are representative of ++, +-.. Change
             // if i = 0 change is negative, 
-            for (int i = -1; i < 1; i++)
+
+            for (int axisChange = 0; axisChange < 3; axisChange++)
             {
-                for (int j = -1; j < 1; j++)
+                // Represents --, +-, ++, -+ changes
+                // via 2 loops positive and negative change in the axis'
+                for (int i = -1; i < 2; i += 2)
                 {
-                    twoDimensionalCheck = checkFor2DAxisNonSpecific(tiles, x, y,  z, gridSize, axisMovement[0], axisMovement[1], axisMovement[2]);
-                }
-            }
+                    for (int j = -1; j < 2; j += 2)
+                    {
+                        if (axisMovement[0] != 0)
+                        {
+                            axisMovement[0] = i;
+                            if (axisMovement[1] != 0)
+                            {
+                                axisMovement[1] = j;
+                            }
+                            else
+                            {
+                                axisMovement[2] = j;
+                            }
 
-            for (int axisChange = 0; axisChange < 4; axisChange++)
-            {
-                if (axisChange == 0)
+                        }
+                        else if (axisMovement[1] != 0)
+                        {
+                            axisMovement[1] = i;
+                            axisMovement[2] = j;
+                        }
+
+                        // lines got too long so saved value in twoDimensionalCheck
+                        twoDimensionalCheck = checkForAxis(tiles, x, y, z, gridSize, axisMovement[0], axisMovement[1], axisMovement[2]);
+                        if (twoDimensionalCheck[0][0].ToString() != "-3")
+                        {
+                            return twoDimensionalCheck;
+                        }
+                    }
+                }
+                // Represents the changes between YZ, XZ, YX
+                if (axisMovement[0] != 0 && axisMovement[1] != 0)
                 {
-                    
+                    axisMovement[2] = 1;
+                    axisMovement[0] = 0;
+                }
+                else if (axisMovement[1] != 0 && axisMovement[2] != 0)
+                {
+                    axisMovement[0] = 1;
+                    axisMovement[1] = 0;
                 }
 
-
             }
-
-
-            // How do we generalize this
-            // X & Y 
-            //
-            // Positive Change X and Y
-            //try
-            //{
-            //    if (
-            //}
-            //catch { }
 
             return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
 
 
-
-        private static int[][] checkFor2DAxisNonSpecific(Tile[] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
+        
+        private static int[][] checkForAxis(Tile[] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
         {
             // X & Y 
             //
             // Positive Change X and Y
             try
             {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + (y + 1) * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + (y + 2) * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + xChange + (y + yChange) * gridSize].getRingValue(z + zChange) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (xChange * 2) + (y + yChange * 2) * gridSize].getRingValue(z + zChange * 2))
                 {
-                    return [[x, y, z], [x + 1, y + 1, z], [x + 2, y + 2, z]];
+                    return [[x, y, z], [x + xChange, y + yChange, z + zChange], [x + xChange * 2, y + yChange * 2, z + zChange * 2]];
                 }
             }
             catch { }
@@ -231,7 +255,26 @@ namespace COSC2100_A2_MaxDinsmore
 
         private static int[][] checkFor3DDiagonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
+            // Need to check combinations of +- for all 3 axes
+            // ---, -+-, -++, --+, +--, ++-, +-+, +++ 8 In total
+            // can do like 2d and have 3 for loops
+            int[][] threeDimensionalCheck;
 
+            for (int i = -1; i < 2; i+=2)
+            {
+                for (int j = -1; j < 2; j += 2)
+                {
+                    for (int k = -1; k < 2; k +=2)
+                    {
+                        threeDimensionalCheck = checkForAxis(tiles, x, y, z, gridSize, i, j, k);
+                        if (threeDimensionalCheck[0][0].ToString() != "-3")
+                        {
+                            return threeDimensionalCheck;
+                        }
+                    }
+                }
+            }
+            
             return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
     }
@@ -240,88 +283,3 @@ namespace COSC2100_A2_MaxDinsmore
 
 }
 
-//// Negative Change X and Y
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + (y - 1) * gridSize].getRingValue(z) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + (y - 2) * gridSize].getRingValue(z))
-//    {
-//        return [[x, y, z], [x - 1, y - 1, z], [x - 2, y - 2, z]];
-//    }
-//}
-//catch { }
-//// +1,-1 Change X and Y
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + (y - 1) * gridSize].getRingValue(z) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + (y + 1) * gridSize].getRingValue(z))
-//    {
-//        return [[x - 1, y - 1, z], [x, y, z], [x + 1, y + 1, z]];
-//    }
-//}
-//catch { }
-
-//// Z & Y 
-////
-//// Positive Change Z and Y
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z + 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 2) * gridSize].getRingValue(z + 2))
-//    {
-//        return [[x, y, z], [x, y + 1, z + 1], [x, y + 2, z + 2]];
-//    }
-//}
-//catch { }
-//// Negative Change Z and Y
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z - 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 2) * gridSize].getRingValue(z - 2))
-//    {
-//        return [[x, y, z], [x, y - 1, z - 1], [x, y - 2, z - 2]];
-//    }
-//}
-//catch { }
-//// +1,-1 Change Z and Y
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z - 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z + 1))
-//    {
-//        return [[x, y - 1, z - 1], [x, y, z], [x, y + 1, z + 1]];
-//    }
-//}
-//catch { }
-//// Z & X 
-////
-//// Positive Change Z and X
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z + 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + y * gridSize].getRingValue(z + 2))
-//    {
-//        return [[x, y, z], [x + 1, y, z + 1], [x + 2, y, z + 2]];
-//    }
-//}
-//catch { }
-//// Negative Change Z and X
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z - 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + y * gridSize].getRingValue(z - 2))
-//    {
-//        return [[x, y, z], [x - 1, y, z - 1], [x - 2, y, z - 2]];
-//    }
-//}
-//catch { }
-//// +1,-1 Change Z and X
-//try
-//{
-//    if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z - 1) &&
-//        tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z + 1))
-//    {
-//        return [[x - 1, y, z - 1], [x, y, z], [x - 1, y, z + 1]];
-//    }
-//}
-//catch { }
