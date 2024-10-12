@@ -94,14 +94,14 @@ namespace COSC2100_A2_MaxDinsmore
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
 
             tiles = new Tile[gridSize * gridSize];
-            for (int x = 0; x < gridSize; x++)
+            for (int y = 0; y < gridSize; y++)
             {
-                for (int y = 0; y < gridSize; y++)
+                for (int x = 0; x < gridSize; x++)
                 {
 
                     tiles[x + y * gridSize] = new Tile
                     {
-                        Margin = new Thickness(y * 168, x * 168, 0, 0),
+                        Margin = new Thickness(x * 168, y * 168, 0, 0),
                         Name = "tile" + (x + y * gridSize),
                         Visibility = Visibility.Visible,
                         Height = 168,
@@ -149,9 +149,9 @@ namespace COSC2100_A2_MaxDinsmore
             {
 
                 Thread.Sleep(100);
-                for (int x = 0; x < gridSize; x++)
+                for (int y = 0; y < gridSize; y++)
                 {
-                    for (int y = 0; y < gridSize; y++)
+                    for (int x = 0; x < gridSize; x++)
                     {
                         lastAccessedPiece = [x, y, -1];
                         successfulHit = checkTileInfo(tiles[x + y * gridSize]);
@@ -241,9 +241,9 @@ namespace COSC2100_A2_MaxDinsmore
                     });
                     // tile ring is now marked as clicked by player
 
-
+                    //Checks if player won
                     int[][] check = checkForWin(tiles, gridSize, lastAccessedPiece);
-                    if (check[0][0].ToString() != "-1")
+                    if (check[0][0].ToString() != "-3")
                     {
                         // Message Box For Debugging
                         try
@@ -255,13 +255,16 @@ namespace COSC2100_A2_MaxDinsmore
 
                         } catch
                         {
+                            
+                            MessageBox.Show(check[0][0].ToString());
                             MessageBox.Show("Error win is false");
                         }
                         
-                        //MessageBox.Show("player won!");
                     }
-                    MessageBox.Show(check[0][0].ToString());
-                    //Checks if player won
+                    MessageBox.Show(" ["
+                                + lastAccessedPiece[0].ToString() + ", " + lastAccessedPiece[1].ToString() + ", " + lastAccessedPiece[2].ToString() + "]");
+
+                    // Changes players Turn
                     nextTurn();
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace COSC2100_A2_MaxDinsmore
 {
@@ -34,21 +35,27 @@ namespace COSC2100_A2_MaxDinsmore
 
         public static int[][] checkForWin(Tile[] tiles, int gridSize, int[] placedPiece)
         {
-            int[][] check = [[-1]];
+            int[][] check = [[-3,-3,-3], [-3, -3, -3], [-3, -3, -3]];
 
             // 3D orthogonal Check
-            if (check != checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize))
+            if (check[0][0] != checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
+                MessageBox.Show("X won");
+                MessageBox.Show(" ["
+                                + placedPiece[0].ToString() + ", " + placedPiece[1].ToString() + ", " + placedPiece[2].ToString() + "]");
+                
                 return checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
 
-            if (check != checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize))
+            if (check[0][0] != checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
+                MessageBox.Show("Y won");
                 return checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
 
-            if (check != checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize))
+            if (check[0][0] != checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
+                MessageBox.Show("Z won");
                 return checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
             // 2D diagonal Checks
@@ -60,24 +67,26 @@ namespace COSC2100_A2_MaxDinsmore
 
 
             // No one won
-            return check;
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
 
         private static int[][] checkForZOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + x + gridSize].getRingValue(z - 1) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + x * gridSize].getRingValue(z - 2))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 1) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 2))
                 {
+                    MessageBox.Show(tiles[x + y * gridSize].getRingValue(z).ToString());
                     return [[x, y, z], [x, y, z - 1], [x, y, z -2]];
+                    
                 }
             }
             catch { }
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + x * gridSize].getRingValue(z + 1) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + x * gridSize].getRingValue(z + 2))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 1) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 2))
                 {
                     return [[x, y, z], [x, y, z + 1], [x, y, z + 2]];
                 }
@@ -86,22 +95,22 @@ namespace COSC2100_A2_MaxDinsmore
             catch { }
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + x * gridSize].getRingValue(z - 1) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + x * gridSize].getRingValue(z + 1))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 1) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 1))
                 {
                     return [[x, y, z - 1], [x, y, z], [x, y, z + 1]];
                 }
             }
             catch { }
             // No one won
-            return [[-1]];
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
         private static int[][] checkForYOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
             try
             { // Y to Y down 2
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y - 1 + x * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y - 2 + x * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 2) * gridSize].getRingValue(z))
                 {
                     return [[x, y, z], [x, y-1, z], [x, y-2, z]];
                 }
@@ -109,8 +118,8 @@ namespace COSC2100_A2_MaxDinsmore
             catch { }
             try
             { // Y to Y up 2
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + 1 + x * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + 2 + x * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 2) * gridSize].getRingValue(z))
                 {
                     return [[x, y , z], [x, y + 1, z], [x, y + 2, z]];
                 }
@@ -119,23 +128,24 @@ namespace COSC2100_A2_MaxDinsmore
 
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + 1 + x * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y - 1 + x * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z))
                 {
                     return [[x, y - 1, z], [x, y, z], [x, y + 1, z]];
                 }
             }
             catch { }
             // No one won
-            return [[-1]];
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
         private static int[][] checkForXOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x - 1) * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x - 2)* gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + y * gridSize].getRingValue(z))
                 {
+
                     return [[x, y, z], [x - 1, y, z], [x - 2, y, z]];
                 }
             }
@@ -143,8 +153,8 @@ namespace COSC2100_A2_MaxDinsmore
 
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x + 1) * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x + 2) * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + y * gridSize].getRingValue(z))
                 {
                     return [[x, y, z], [x, y, z], [x, y, z]];
                 }
@@ -153,16 +163,16 @@ namespace COSC2100_A2_MaxDinsmore
 
             try
             {
-                if (tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x - 1) * gridSize].getRingValue(z) &&
-                    tiles[y + x * gridSize].getRingValue(z) == tiles[y + (x + 1) * gridSize].getRingValue(z))
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z))
                 {
+                    MessageBox.Show(tiles[x + y * gridSize].getRingValue(z).ToString());
                     return [[x - 1, y, z], [x, y, z], [x + 1, y, z]];
                 }
             }
             catch { }
-
             // No one won
-            return [[-1]];
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
 
 
