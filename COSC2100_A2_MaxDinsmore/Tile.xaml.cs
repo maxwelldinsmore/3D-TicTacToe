@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -21,7 +22,7 @@ namespace COSC2100_A2_MaxDinsmore
     /// </summary>
     public partial class Tile : UserControl
     {
-       public int[] circles = [0, 0, 0];
+       private int[] circles = [0, 0, 0];
         public Tile()
         {
             InitializeComponent();
@@ -69,6 +70,15 @@ namespace COSC2100_A2_MaxDinsmore
                 }
             }
             
+        }
+        public int getRingValue(int size)
+        {
+            return circles[size];
+        }
+
+        public void setRingValue(int circle, int playerNum)
+        {
+            this.circles[circle] = playerNum;
         }
     }
 }
