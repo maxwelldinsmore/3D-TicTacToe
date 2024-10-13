@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿// Class to hold spare
+// Functions for 3D tic tac toe
+// mainly used to store checking for wins Functions
 
 namespace COSC2100_A2_MaxDinsmore
 {
@@ -30,9 +27,16 @@ namespace COSC2100_A2_MaxDinsmore
         // so 3 main checks
         // orthgonal check, diagonal along z,y check and diagonal along x,y,z check
 
-        // I originally overcomplicated this, only need to check for win based off ring piece that was
-        // just placed
 
+
+        /// <summary>
+        /// Calls other Checking for Win functions and returns their grid values if they are
+        /// not the default check values
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="gridSize"></param>
+        /// <param name="placedPiece"></param>
+        /// <returns></returns>
         public static int[][] checkForWin(Tile[] tiles, int gridSize, int[] placedPiece)
         {
             int[][] check = [[-3,-3,-3], [-3, -3, -3], [-3, -3, -3]];
@@ -235,23 +239,6 @@ namespace COSC2100_A2_MaxDinsmore
 
 
         
-        private static int[][] checkForAxis(Tile[] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
-        {
-            // X & Y 
-            //
-            // Positive Change X and Y
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + xChange + (y + yChange) * gridSize].getRingValue(z + zChange) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (xChange * 2) + (y + yChange * 2) * gridSize].getRingValue(z + zChange * 2))
-                {
-                    return [[x, y, z], [x + xChange, y + yChange, z + zChange], [x + xChange * 2, y + yChange * 2, z + zChange * 2]];
-                }
-            }
-            catch { }
-
-            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
-        }
 
         private static int[][] checkFor3DDiagonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
@@ -275,6 +262,46 @@ namespace COSC2100_A2_MaxDinsmore
                 }
             }
             
+            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+        }
+
+
+        /// <summary>
+        ///  Does one check of a diagonal line on the grid to see if the player has won
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="gridSize"></param>
+        /// <param name="xChange"></param>
+        /// <param name="yChange"></param>
+        /// <param name="zChange"></param>
+        /// <returns></returns>
+        private static int[][] checkForAxis(Tile[] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
+        {
+            // X & Y 
+            //
+            // Positive Change X and Y
+            try
+            {
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + xChange + (y + yChange) * gridSize].getRingValue(z + zChange) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (xChange * 2) + (y + yChange * 2) * gridSize].getRingValue(z + zChange * 2))
+                {
+                    return [[x, y, z], [x + xChange, y + yChange, z + zChange], [x + xChange * 2, y + yChange * 2, z + zChange * 2]];
+                }
+            }
+            catch { }
+            try
+            {
+                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + xChange + (y + yChange) * gridSize].getRingValue(z + zChange) &&
+                    tiles[x + y * gridSize].getRingValue(z) == tiles[x - xChange + (y - yChange) * gridSize].getRingValue(z - zChange))
+                {
+                    return [[x - xChange, y - yChange, z - zChange], [x, y, z], [x + xChange, y + yChange, z + zChange]];
+                }
+            }
+            catch { }
+
             return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
     }

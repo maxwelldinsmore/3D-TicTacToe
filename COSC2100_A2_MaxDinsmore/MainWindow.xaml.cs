@@ -1,18 +1,16 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 using static COSC2100_A2_MaxDinsmore.Functions;
+
+// Max Dinsmore
+// 3D Tic Tac Toe
+// COSC 2100
+// Kyle Chapman
+// Description
+// Tic Tac Toe but 3D using coloured rings instead of X's and O's 
+// Different Sized rings on one tile represent heights of the pieces
 
 namespace COSC2100_A2_MaxDinsmore
 {
@@ -30,6 +28,7 @@ namespace COSC2100_A2_MaxDinsmore
         //public Image[] rings;
         public int playerCount;
         public int[] lastAccessedPiece;
+        public bool gameFinished = false;
         System.Windows.Controls.Label playerTurnLabel;
         
         
@@ -63,20 +62,24 @@ namespace COSC2100_A2_MaxDinsmore
             
         }
 
- 
+        /// <summary>
+        /// Starts game and generates neccesary assets
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
             playerCount = 0;
             int.TryParse(this.playerCountTextBox.Text, out playerCount);
-            if (playerCount < 2 && playerCount > 4)
+            if (playerCount < 2 || playerCount > 4)
             {
                 MessageBox.Show("Error invalid amount of players!");
                 return;
             }
             players = new Player[playerCount];
-            for (int i = 0; i < playerCount; i++)
+            for (int i = 1; i < playerCount + 1; i++)
             {
-                players[i] = new Player(i);
+                players[i -1] = new Player(i);
             }
 
             hideMenuItems();
@@ -93,6 +96,7 @@ namespace COSC2100_A2_MaxDinsmore
             // Thickness referenced from stack overflow
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
 
+            // Generates grid based off tile object class
             tiles = new Tile[gridSize * gridSize];
             for (int y = 0; y < gridSize; y++)
             {
@@ -123,6 +127,8 @@ namespace COSC2100_A2_MaxDinsmore
                 Height = 40,
                 Width = 100,
                 Content = "Player 1's Turn",
+                BorderBrush = new SolidColorBrush(Colors.Maroon),
+                BorderThickness = new Thickness(4, 4, 4, 4)
             };
             grid.Children.Add(playerTurnLabel);
 
@@ -140,12 +146,15 @@ namespace COSC2100_A2_MaxDinsmore
 
 
 
-
+        /// <summary>
+        /// Game loop starts after start button click
+        /// runs until game ends
+        /// </summary>
         private void gameRun()
         {
             
-            bool successfulHit = false;
-            while (true)
+            bool successfulHit;
+            while (!gameFinished)
             {
 
                 Thread.Sleep(100);
@@ -159,8 +168,14 @@ namespace COSC2100_A2_MaxDinsmore
                 }
 
             }
+
+            
+
         }
 
+        /// <summary>
+        /// Changes players turn and changes label appriopriately
+        /// </summary>
         private void nextTurn()
         {
             if (playersTurn < playerCount)
@@ -176,6 +191,8 @@ namespace COSC2100_A2_MaxDinsmore
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     playerTurnLabel.Content = $"Player {playersTurn}'s Turn";
+                    playerTurnLabel.BorderBrush = new SolidColorBrush(players[playersTurn - 1].GetColour());
+                    playerTurnLabel.BorderThickness = new Thickness(4, 4, 4, 4);
                 }));
             }
             catch (Exception ex)
@@ -192,6 +209,7 @@ namespace COSC2100_A2_MaxDinsmore
             for (int i = 0; i < 3; i++)
             {
                 // Negative 1 means tile was just clicked
+                // and if true loads in a ring representing a players click
                 if (tile.getRingValue(i) == -1)
                 {
                     lastAccessedPiece[2] = i;
@@ -216,15 +234,15 @@ namespace COSC2100_A2_MaxDinsmore
                         };
                         double scale = 0;
                         if (i == 0)
-                        {
+                        {   // Had to manually adjust scales of each rings
                             scale = 83;
                             ring.Margin = new Thickness(tile.Margin.Left+ 43, tile.Margin.Top + 43 , 0, 0);
 
                         }
                         else if (i == 1)
                         {
-                            scale = 123;
-                            ring.Margin = new Thickness(tile.Margin.Left + 23 , tile.Margin.Top + 23, 0, 0);
+                            scale = 122.7;
+                            ring.Margin = new Thickness(tile.Margin.Left + 23.5 , tile.Margin.Top + 23.5, 0, 0);
 
                         }
                         else
@@ -245,24 +263,27 @@ namespace COSC2100_A2_MaxDinsmore
                     int[][] check = checkForWin(tiles, gridSize, lastAccessedPiece);
                     if (check[0][0].ToString() != "-3")
                     {
-                        // Message Box For Debugging
-                        try
-                        {
-                            MessageBox.Show("Player " + playersTurn.ToString() + " Won at tiles [" 
-                                + check[0][0].ToString() + ", " + check[0][1].ToString() + ", " +  check[0][2].ToString() + "], [" +
-                                check[1][0].ToString() + ", " + check[1][1].ToString() + ", " + check[1][2].ToString() + "], [" +
-                                check[2][0].ToString() + ", " + check[2][1].ToString() + ", " + check[2][2].ToString() + "]" );
 
-                        } catch
-                        {
+                        MessageBox.Show("Player " + playersTurn.ToString() + " Won!");
+                        gameFinished = true;
+                        // Message Box For Debugging
+                        //try
+                        //{
+                        //    MessageBox.Show("Player " + playersTurn.ToString() + " Won at tiles [" 
+                        //        + check[0][0].ToString() + ", " + check[0][1].ToString() + ", " +  check[0][2].ToString() + "], [" +
+                        //        check[1][0].ToString() + ", " + check[1][1].ToString() + ", " + check[1][2].ToString() + "], [" +
+                        //        check[2][0].ToString() + ", " + check[2][1].ToString() + ", " + check[2][2].ToString() + "]" );
+
+                        //} catch
+                        //{
                             
-                            MessageBox.Show(check[0][0].ToString());
-                            MessageBox.Show("Error win is false");
-                        }
+                        //    MessageBox.Show(check[0][0].ToString());
+                        //    MessageBox.Show("Error win is false");
+                        //}
                         
                     }
-                    MessageBox.Show(" ["
-                                + lastAccessedPiece[0].ToString() + ", " + lastAccessedPiece[1].ToString() + ", " + lastAccessedPiece[2].ToString() + "]");
+                    // MessageBox.Show(" ["
+                    //            + lastAccessedPiece[0].ToString() + ", " + lastAccessedPiece[1].ToString() + ", " + lastAccessedPiece[2].ToString() + "]");
 
                     // Changes players Turn
                     nextTurn();
