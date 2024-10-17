@@ -24,12 +24,11 @@ namespace COSC2100_A2_MaxDinsmore
         int gridSize;
         public int playersTurn = 1;
         Player[] players;
-        public Tile[] tiles;
-        //public Image[] rings;
-        public int playerCount;
-        public int[] lastAccessedPiece;
-        public bool gameFinished = false;
-        System.Windows.Controls.Label playerTurnLabel;
+        Tile[] tiles;
+        int playerCount;
+        int[] lastAccessedPiece;
+        bool gameFinished = false;
+        Label playerTurnLabel;
         
         
         public MainWindow()
@@ -273,17 +272,13 @@ namespace COSC2100_A2_MaxDinsmore
                         //        + check[0][0].ToString() + ", " + check[0][1].ToString() + ", " +  check[0][2].ToString() + "], [" +
                         //        check[1][0].ToString() + ", " + check[1][1].ToString() + ", " + check[1][2].ToString() + "], [" +
                         //        check[2][0].ToString() + ", " + check[2][1].ToString() + ", " + check[2][2].ToString() + "]" );
-
                         //} catch
                         //{
-                            
                         //    MessageBox.Show(check[0][0].ToString());
                         //    MessageBox.Show("Error win is false");
                         //}
                         
                     }
-                    // MessageBox.Show(" ["
-                    //            + lastAccessedPiece[0].ToString() + ", " + lastAccessedPiece[1].ToString() + ", " + lastAccessedPiece[2].ToString() + "]");
 
                     // Changes players Turn
                     nextTurn();
