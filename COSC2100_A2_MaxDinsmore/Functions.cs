@@ -42,18 +42,12 @@ namespace COSC2100_A2_MaxDinsmore
             int[][] check = [[-3,-3,-3], [-3, -3, -3], [-3, -3, -3]];
 
             // 3D orthogonal Check
-            if (check[0][0] != checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
-            {  
-                return checkForXOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
-            }
-            if (check[0][0] != checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
+            if (check[0][0] != orthogonalChecks(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
-                return checkForYOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+                return orthogonalChecks(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
-            if (check[0][0] != checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
-            {
-                return checkForZOrthogonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
-            }
+
+
             // 2D diagonal Checks
             if (check[0][0] != checkFor2DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0][0])
             {
@@ -71,109 +65,34 @@ namespace COSC2100_A2_MaxDinsmore
             // No one won
             return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
         }
-
-        private static int[][] checkForZOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
+        private static int[][] orthogonalChecks(Tile[] tiles, int x, int y, int z, int gridSize)
         {
-            try
+            int[][] orthogonalCheck = [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+            for (int i = -1; i< 2; i+=2)
             {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 1) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 2))
+                if (orthogonalCheck[0][0] == -3)
                 {
-                    return [[x, y, z], [x, y, z - 1], [x, y, z -2]];
-                    
+                    // X Change
+                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, i, 0, 0);
                 }
-            }
-            catch { }
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 1) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 2))
+                if (orthogonalCheck[0][0] == -3)
                 {
-                    return [[x, y, z], [x, y, z + 1], [x, y, z + 2]];
+                    // Y Change
+                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, 0, i, 0);
+                }
+                if (orthogonalCheck[0][0] == -3)
+                {
+                    // Z Change
+                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, 0, 0, i);
                 }
                 
             }
-            catch { }
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z - 1) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + y * gridSize].getRingValue(z + 1))
-                {
-                    return [[x, y, z - 1], [x, y, z], [x, y, z + 1]];
-                }
-            }
-            catch { }
-            // No one won
-            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
+
+            return orthogonalCheck;
+            
+
         }
-        private static int[][] checkForYOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
-        {
-            try
-            { // Y to Y down 2
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 2) * gridSize].getRingValue(z))
-                {
-                    return [[x, y, z], [x, y-1, z], [x, y-2, z]];
-                }
-            }
-            catch { }
-            try
-            { // Y to Y up 2
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 2) * gridSize].getRingValue(z))
-                {
-                    return [[x, y , z], [x, y + 1, z], [x, y + 2, z]];
-                }
-            }
-            catch { }
-
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y - 1) * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + (y + 1) * gridSize].getRingValue(z))
-                {
-                    return [[x, y - 1, z], [x, y, z], [x, y + 1, z]];
-                }
-            }
-            catch { }
-            // No one won
-            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
-        }
-        private static int[][] checkForXOrthogonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
-        {
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x - 2 + y * gridSize].getRingValue(z))
-                {
-
-                    return [[x, y, z], [x - 1, y, z], [x - 2, y, z]];
-                }
-            }
-            catch { }
-
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 2 + y * gridSize].getRingValue(z))
-                {
-                    return [[x, y, z], [x, y, z], [x, y, z]];
-                }
-            }
-            catch { }
-
-            try
-            {
-                if (tiles[x + y * gridSize].getRingValue(z) == tiles[x - 1 + y * gridSize].getRingValue(z) &&
-                    tiles[x + y * gridSize].getRingValue(z) == tiles[x + 1 + y * gridSize].getRingValue(z))
-                {
-                    return [[x - 1, y, z], [x, y, z], [x + 1, y, z]];
-                }
-            }
-            catch { }
-            // No one won
-            return [[-3, -3, -3], [-3, -3, -3], [-3, -3, -3]];
-        }
+        
 
         private static int[][] checkFor2DDiagonalWin(Tile[] tiles, int x, int y, int z, int gridSize)
         {
