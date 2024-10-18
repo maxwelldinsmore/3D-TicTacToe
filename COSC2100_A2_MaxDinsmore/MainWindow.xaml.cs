@@ -231,27 +231,8 @@ namespace COSC2100_A2_MaxDinsmore
                             IsHitTestVisible = false,
 
                         };
-                        double scale = 0;
-                        if (i == 0)
-                        {   // Had to manually adjust scales of each rings
-                            scale = 83;
-                            ring.Margin = new Thickness(tile.Margin.Left+ 43, tile.Margin.Top + 43 , 0, 0);
-
-                        }
-                        else if (i == 1)
-                        {
-                            scale = 122.7;
-                            ring.Margin = new Thickness(tile.Margin.Left + 23.5 , tile.Margin.Top + 23.5, 0, 0);
-
-                        }
-                        else
-                        {
-                            scale = 157.5;
-                            ring.Margin = new Thickness(tile.Margin.Left + 5.9, tile.Margin.Top + 5.9, 0, 0);
-
-                        }
-                        ring.Height = scale;
-                        ring.Width = scale;
+                        
+                        ring.Margin = new Thickness(tile.Margin.Left, tile.Margin.Top, 0, 0);
                         grid.Children.Add(ring);
                         tile.setRingValue(i, playersTurn);
 
