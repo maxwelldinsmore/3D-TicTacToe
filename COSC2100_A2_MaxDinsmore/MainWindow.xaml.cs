@@ -24,7 +24,7 @@ namespace COSC2100_A2_MaxDinsmore
         int gridSize;
         public int playersTurn = 1;
         Player[] players;
-        Tile[] tiles;
+        Tile[,] tiles;
         int playerCount;
         int[] lastAccessedPiece;
         bool gameFinished = false;
@@ -96,13 +96,13 @@ namespace COSC2100_A2_MaxDinsmore
             // https://stackoverflow.com/questions/1003772/setting-margin-properties-in-code
 
             // Generates grid based off tile object class
-            tiles = new Tile[gridSize * gridSize];
+            tiles = new Tile[gridSize, gridSize];
             for (int y = 0; y < gridSize; y++)
             {
                 for (int x = 0; x < gridSize; x++)
                 {
 
-                    tiles[x + y * gridSize] = new Tile
+                    tiles[x,y] = new Tile
                     {
                         Margin = new Thickness(x * 168, y * 168, 0, 0),
                         Name = "tile" + (x + y * gridSize),
@@ -114,7 +114,7 @@ namespace COSC2100_A2_MaxDinsmore
                     };
 
                     // Add the tile to the grid
-                    grid.Children.Add(tiles[x + y * gridSize]);
+                    grid.Children.Add(tiles[x ,y]);
 
                 }
             }
@@ -162,7 +162,7 @@ namespace COSC2100_A2_MaxDinsmore
                     for (int x = 0; x < gridSize; x++)
                     {
                         lastAccessedPiece = [x, y, -1];
-                        successfulHit = checkTileInfo(tiles[x + y * gridSize]);
+                        successfulHit = checkTileInfo(tiles[x ,y]);
                     }
                 }
 
@@ -227,12 +227,13 @@ namespace COSC2100_A2_MaxDinsmore
                             VerticalAlignment = 0,
                             Source = bitmap,
                             Visibility = Visibility.Visible,
-                            Margin = tile.Margin,
+                            Margin = new Thickness(tile.Margin.Left + 0.7, tile.Margin.Top + 0.7,0,0),
                             IsHitTestVisible = false,
-
+                            Height= 168.1,
+                            Width= 168.1,
                         };
                         
-                        ring.Margin = new Thickness(tile.Margin.Left, tile.Margin.Top, 0, 0);
+                      
                         grid.Children.Add(ring);
                         tile.setRingValue(i, playersTurn);
 
@@ -240,8 +241,8 @@ namespace COSC2100_A2_MaxDinsmore
                     // tile ring is now marked as clicked by player
 
                     //Checks if player won
-                    int[][] check = checkForWin(tiles, gridSize, lastAccessedPiece);
-                    if (check[0][0].ToString() != "-3")
+                    int[,] check = checkForWin(tiles, gridSize, lastAccessedPiece);
+                    if (check[0,0].ToString() != "-3")
                     {
 
                         MessageBox.Show("Player " + playersTurn.ToString() + " Won!");

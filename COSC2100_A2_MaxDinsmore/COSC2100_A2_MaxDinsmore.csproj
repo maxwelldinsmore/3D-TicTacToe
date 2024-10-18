@@ -15,7 +15,6 @@
     <None Remove="Assets\greenRing1.png" />
     <None Remove="Assets\greenRing2.png" />
     <None Remove="Assets\greenRing3.png" />
-    <None Remove="Assets\pegPiece.png" />
     <None Remove="Assets\purpleRing1.png" />
     <None Remove="Assets\purpleRing2.png" />
     <None Remove="Assets\purpleRing3.png" />
@@ -32,7 +31,6 @@
     <Resource Include="Assets\greenRing1.png" />
     <Resource Include="Assets\greenRing2.png" />
     <Resource Include="Assets\greenRing3.png" />
-    <Resource Include="Assets\pegPiece.png" />
     <Resource Include="Assets\purpleRing1.png" />
     <Resource Include="Assets\purpleRing2.png" />
     <Resource Include="Assets\purpleRing3.png" />
