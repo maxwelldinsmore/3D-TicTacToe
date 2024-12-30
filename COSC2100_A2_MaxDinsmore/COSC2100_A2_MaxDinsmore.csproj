@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\blueRing1.png" />
     <Resource Include="Assets\blueRing2.png" />
     <Resource Include="Assets\blueRing3.png" />

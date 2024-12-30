@@ -4,7 +4,7 @@
 
 namespace COSC2100_A2_MaxDinsmore
 {
-    class Functions
+    static class Functions
     {
         // Function to check if user won after they placed piece
         //
