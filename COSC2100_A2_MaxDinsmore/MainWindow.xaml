@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:COSC2100_A2_MaxDinsmore"
         xmlns:control="clr-namespace:COSC2100_A2_MaxDinsmore"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"     
 
         mc:Ignorable="d"
         Title="TicTacToe" 
-        Height="416" Width="500" 
+        Height="450" Width="550" 
         ResizeMode="NoResize"
         >
 
@@ -28,7 +28,8 @@
             <Label x:Name="titleLabel" Content="3d Tic Tac Toe!" HorizontalAlignment="Left" Margin="44,16,0,0" VerticalAlignment="Top" Height="42" Width="142" FontSize="18"/>
             <Button x:Name="buttonStartGame" Content="Start Game!" HorizontalAlignment="Center" VerticalAlignment="Top" Click="buttonStartGame_Click" Height="93" Width="122" Margin="0,248,0,0" />
             <Label x:Name="playerLabel" Content="Players (2-4):" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" Height="27" Width="82"/>
-            <TextBox x:Name="playerCountTextBox" HorizontalAlignment="Left" Margin="97,87,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" Width="76" />
+            <xctk:IntegerUpDown x:Name="playerCountTextBox" HorizontalAlignment="Left" Margin="97,86,0,0" VerticalAlignment="Top" Width="76" Minimum="2" Maximum="4" Value="4" ValueChanged="playerCountTextBox_ValueChanged" />
+
             <Label x:Name="gridSizeLabel" Content="Grid Size:" HorizontalAlignment="Left" 
                 Margin="10,137,0,0" VerticalAlignment="Top" Height="25" Width="82"/>
             <RadioButton x:Name="_3SizeRadioButton" Content="3x3 Grid" HorizontalAlignment="Left" 

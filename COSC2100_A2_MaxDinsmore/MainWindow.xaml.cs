@@ -40,9 +40,36 @@ namespace COSC2100_A2_MaxDinsmore
             //}
         }
 
+        // TODO: Implement this method
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+
+        private void buttonStartGame_Click(object sender, RoutedEventArgs e)
+        {
+            playerCount = (int)playerCountTextBox.Value;
+
+        }
+
+        private void playerCountTextBox_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (playerCountTextBox.Value == 2)
+            {
+                if (gridPlayer3Info != null) gridPlayer3Info.Visibility = Visibility.Hidden;
+                if (gridPlayer4Info != null) gridPlayer4Info.Visibility = Visibility.Hidden;
+            }
+            else if (playerCountTextBox.Value == 3)
+            {
+                if (gridPlayer3Info != null) gridPlayer3Info.Visibility = Visibility.Visible;
+                if (gridPlayer4Info != null) gridPlayer4Info.Visibility = Visibility.Hidden;
+            }
+            else if (playerCountTextBox.Value == 4)
+            {
+                if (gridPlayer3Info != null) gridPlayer3Info.Visibility = Visibility.Visible;
+                if (gridPlayer4Info != null) gridPlayer4Info.Visibility = Visibility.Visible;
+            }
         }
     }
 }
