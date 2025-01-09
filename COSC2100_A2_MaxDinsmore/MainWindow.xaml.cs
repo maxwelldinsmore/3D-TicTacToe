@@ -50,7 +50,9 @@ namespace COSC2100_A2_MaxDinsmore
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
             playerCount = (int)playerCountTextBox.Value;
-
+            Game newGame = new Game();
+            newGame.Show();
+            this.Hide();
         }
 
         private void playerCountTextBox_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

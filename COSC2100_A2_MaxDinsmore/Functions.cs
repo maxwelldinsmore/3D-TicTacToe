@@ -89,8 +89,7 @@ namespace COSC2100_A2_MaxDinsmore
             }
 
             return orthogonalCheck;
-            
-
+  
         }
         
 

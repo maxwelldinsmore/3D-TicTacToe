@@ -26,8 +26,6 @@ namespace COSC2100_A2_MaxDinsmore
         public Tile()
         {
             InitializeComponent();
-
-            
         }
 
         private void screenClick(object sender, MouseButtonEventArgs e)

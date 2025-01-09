@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace COSC2100_A2_MaxDinsmore
@@ -20,61 +13,114 @@ namespace COSC2100_A2_MaxDinsmore
     public partial class Game : Window
     {
 
-        const int BoardSize = 3;
-        const int PlayerCount = 2;
-        const int CirclesPerTile = 3;
-        const string BoardBackground = "Brown";
-
-        private int[,] boardInfo = new int[BoardSize, CirclesPerTile];
+        int BoardSize;
+        int PlayerCount;
+        int CirclesPerTile;
+        string BoardBackground = "Brown";
+        double TileLength;
         private int currentPlayerTurn; 
         private Random random = new Random();
-        public Game()
+        public Game(int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
         {
+            BoardSize = gameBoardSize;
+            PlayerCount = gamePlayerCount;
+            CirclesPerTile = gameCirclesPerTile;
             InitializeComponent();
             currentPlayerTurn = random.Next(0, PlayerCount);
+            CanvasRepaint();
+            int[,] boardInfo = new int[BoardSize, CirclesPerTile];
+            
+
         }
 
         public void CanvasRepaint()
+    {
+        // Clear the canvas
+        canvasGameBoard.Children.Clear();
+        // Brown background
+        canvasGameBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BoardBackground));
+
+        // Calculate the size of each tile
+        TileLength = canvasGameBoard.Height / BoardSize;
+        // Draw the grid
+
+            for (int j = 0; j < 2; j++)
         {
-            // Clear the canvas
-            canvasGameBoard.Children.Clear();
-            canvasGameBoard.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BoardBackground));
-
-            double tileHeight = canvasGameBoard.Height / BoardSize;
-
-            // Draw the grid
-            for (int x = 0; x < BoardSize; x++)
+            // Vertical Lines
+            canvasGameBoard.Children.Add(new Line
             {
-                for (int y = 0; y < BoardSize; y++)
-                {
-                    Point currentTileLocation = new Point(x * tileHeight, y * tileHeight);
-                    DrawTile(currentTileLocation);
-                }
-                // Top left corner of the tile
-                
-                
+                X1 = TileLength * (j + 1),
+                X2 = TileLength * (j + 1),
+                Y1 = 0,
+                Y2 = canvasGameBoard.Height,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            });
+            // Horizontal Lines
+            canvasGameBoard.Children.Add(new Line
+            {
+                Y1 = TileLength * (j + 1),
+                Y2 = TileLength * (j + 1),
+                X1 = 0,
+                X2 = canvasGameBoard.Height,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            });
+        }
+        for (int x = 0; x < BoardSize; x++)
+        {
+            for (int y = 0; y < BoardSize; y++)
+            {
+                Point currentTileLocation = new Point(x * TileLength + 2 * x, y * TileLength + 2 * y);
+                DrawTile(currentTileLocation);
             }
+            // Top left corner of the tile
+                  
+        }
+            
         }
         public void DrawTile(Point tilePoint)
         {
-            for (int j = 0; j < CirclesPerTile; j++)
+            // Create a new ellipse
+            Ellipse ellipse1 = new Ellipse
             {
-                // Create a new ellipse
-                Ellipse ellipse = new Ellipse
-                {
-                    Width = 50,
-                    Height = 50,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 2
-                };
+                Width = TileLength / (1),
+                Height = TileLength / (1),
+                Stroke = Brushes.Black,
+                StrokeThickness = 10
+            };
+            // Set the position of the ellipse
+            Canvas.SetLeft(ellipse1, tilePoint.X);
+            Canvas.SetTop(ellipse1, tilePoint.Y);
 
-                // Set the position of the ellipse
-                Canvas.SetLeft(ellipse, tilePoint.X * 60 + 10);
-                Canvas.SetTop(ellipse, tilePoint.Y * 60 + 10);
+            // Add the ellipse to the canvas
+            canvasGameBoard.Children.Add(ellipse1);
+            // Create a new ellipse
+            Ellipse ellipse2 = new Ellipse
+            {
+                Width = TileLength / (2),
+                Height = TileLength / (2),
+                Stroke = Brushes.Black,
+                StrokeThickness = 10
+            };
+            // Set the position of the ellipse
+            Canvas.SetLeft(ellipse2, tilePoint.X);
+            Canvas.SetTop(ellipse2, tilePoint.Y);
+            // Add the ellipse to the canvas
+            canvasGameBoard.Children.Add(ellipse2);
 
-                // Add the ellipse to the canvas
-                canvasGameBoard.Children.Add(ellipse);
-            }
+            // Create a new ellipse
+            Ellipse ellipse3 = new Ellipse
+            {
+                Width = TileLength / (3),
+                Height = TileLength / (3),
+                Stroke = Brushes.Black,
+                StrokeThickness = 10
+            };
+            Canvas.SetLeft(ellipse3, tilePoint.X);
+            Canvas.SetTop(ellipse3, tilePoint.Y);
+            // Add the ellipse to the canvas
+            canvasGameBoard.Children.Add(ellipse3);
         }
 
         private void UserClick(object sender, MouseButtonEventArgs e)
