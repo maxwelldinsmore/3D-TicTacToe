@@ -69,6 +69,7 @@ namespace COSC2100_A2_MaxDinsmore
                     StrokeThickness = GameBorderThickness
                 });
             }
+            int tileNumber = 0;
             for (int x = 0; x < BoardSize; x++)
             {
                 for (int y = 0; y < BoardSize; y++)
@@ -77,13 +78,23 @@ namespace COSC2100_A2_MaxDinsmore
                         x * TileLength + (GameBorderThickness * x), 
                         y * TileLength + (GameBorderThickness * y)
                         );
-                    DrawTile(currentTileLocation);
+                    DrawTile(currentTileLocation, tileNumber);
+                    tileNumber++;
                 }
                    
             }
         }
-        public void DrawTile(Point tilePoint)
+        public void DrawTile(Point tilePoint, int tileNumber)
         {
+            Canvas canvasTile = new Canvas
+            {
+                Width = TileLength,
+                Height = TileLength,
+                ClipToBounds = true,
+            };
+            Canvas.SetLeft(canvasTile, tilePoint.X);
+            Canvas.SetTop(canvasTile, tilePoint.Y);
+
             for (int i = 0; i < CirclesPerTile; i++)
             {
                 // Create a new ellipse
@@ -93,7 +104,7 @@ namespace COSC2100_A2_MaxDinsmore
                     Height = TileLength / (i + 1),
                     Stroke = Brushes.Black,
                     StrokeThickness = 10,
-                    ClipToBounds = true
+                    Name = "piece_" + tileNumber + "_" + i
                 };
                 // Set the position of the ellipse
                 Canvas.SetLeft(ellipse1, tilePoint.X + (TileLength * (i / 3) ) );
