@@ -10,19 +10,15 @@ namespace COSC2100_A2_MaxDinsmore
 
     public class Player
     {
-        private Color Colour;
+        private Brush playerColor;
         public int PlayerNumber;
+        string playerName;
         public int Wins { get; }
-        public Player(int playerNumber, Color colourChoice)
+        public Player(string playerNameChoice, Brush colourChoice)
         {
-           PlayerNumber = playerNumber;
-           Colour = System.Windows.Media.Color.FromArgb(colourChoice.A, colourChoice.R, colourChoice.G, colourChoice.B);
-           Wins = 0;
-        }
-
-        public Color GetColour()
-        {
-            return Colour;
+            playerName = playerNameChoice;
+            playerColor = colourChoice;
+            Wins = 0;
         }
 
     }

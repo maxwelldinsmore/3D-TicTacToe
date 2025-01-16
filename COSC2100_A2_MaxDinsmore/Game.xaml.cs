@@ -104,7 +104,7 @@ namespace COSC2100_A2_MaxDinsmore
             for (int i = 0; i < CirclesPerTile; i++)
             {
                 // Create a new circlePiece
-                Ellipse circlePiece = new Ellipse
+                Ellipse circlePiece = new Ellipse // Fix this
                 {
                     Width = TileLength / pieceSize,
                     Height = TileLength / pieceSize,

@@ -49,11 +49,25 @@ namespace COSC2100_A2_MaxDinsmore
 
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
-            playerCount = (int)playerCountTextBox.Value;
-            Game newGame = new Game();
-            newGame.Closed += NewGame_Closed;
-            newGame.Show();
-            this.Hide();
+            bool errorsFound = false;
+            int playerCount;
+            Int32.TryParse(playerCountTextBox.Text, out playerCount);
+
+
+            Player player = new Player(textBoxPlayer1.Text, new SolidColorBrush(clrPickerPlayer1.SelectedColor.Value));
+
+            if (playerCount == 2)
+            {
+
+            }
+
+            if (errorsFound == false)
+            {
+                Game newGame = new Game();
+                newGame.Closed += NewGame_Closed;
+                newGame.Show();
+                this.Hide();
+            }
         }
 
         private void NewGame_Closed(object? sender, EventArgs e)
