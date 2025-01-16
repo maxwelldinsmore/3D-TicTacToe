@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -78,42 +79,61 @@ namespace COSC2100_A2_MaxDinsmore
                         x * TileLength + (GameBorderThickness * x), 
                         y * TileLength + (GameBorderThickness * y)
                         );
-                    DrawTile(currentTileLocation, tileNumber);
+                    AddTile(currentTileLocation, tileNumber);
                     tileNumber++;
                 }
                    
             }
         }
-        public void DrawTile(Point tilePoint, int tileNumber)
+        public void AddTile(Point tilePoint, int tileNumber)
         {
             Canvas canvasTile = new Canvas
             {
                 Width = TileLength,
                 Height = TileLength,
                 ClipToBounds = true,
+                Background = Brushes.White
             };
             Canvas.SetLeft(canvasTile, tilePoint.X);
             Canvas.SetTop(canvasTile, tilePoint.Y);
 
             for (int i = 0; i < CirclesPerTile; i++)
             {
-                // Create a new ellipse
-                Ellipse ellipse1 = new Ellipse
+                // Create a new circlePiece
+                Ellipse circlePiece = new Ellipse
                 {
                     Width = TileLength / (i + 1),
                     Height = TileLength / (i + 1),
                     Stroke = Brushes.Black,
                     StrokeThickness = 10,
-                    Name = "piece_" + tileNumber + "_" + i
+                    Name = "piece_" + tileNumber + "_" + i,
+                    Uid = "0" // 0 is empty, 1 is player 1, 2 is player 2, etc.
                 };
-                // Set the position of the ellipse
-                Canvas.SetLeft(ellipse1, tilePoint.X + (TileLength * (i / 3) ) );
-                Canvas.SetTop(ellipse1, tilePoint.Y + (TileLength * (i / 3) ) );
+                circlePiece.MouseDown += PieceClick;
+                // Set the position of the circlePiece
+                Canvas.SetLeft(circlePiece, tilePoint.X + (TileLength * (i / 3) ) );
+                Canvas.SetTop(circlePiece, tilePoint.Y + (TileLength * (i / 3) ) );
 
-                // Add the ellipse to the canvas
-                canvasGameBoard.Children.Add(ellipse1);
+                // Add the circlePiece to the canvas
+                canvasTile.Children.Add(circlePiece);
             }
-            
+            canvasGameBoard.Children.Add(canvasTile);
+
+        }
+
+        private void PieceClick(object sender, MouseButtonEventArgs e)
+        {
+            Ellipse clickedPiece = (Ellipse)sender;
+            Debug.WriteLine("Tile " + clickedPiece.Name.Split("_")[1]
+                + "\nPiece " + clickedPiece.Name.Split("_")[2]
+                );
+            // Tiles are top down, left to right, and pieces listed from biggest to smallest
+            if (clickedPiece.Uid == "0")
+            {
+                clickedPiece.Uid = (currentPlayerTurn + 1).ToString();
+                clickedPiece.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Red"));
+                currentPlayerTurn = (currentPlayerTurn + 1) % PlayerCount;
+            }
         }
 
         private void UserClick(object sender, MouseButtonEventArgs e)
@@ -279,7 +299,7 @@ namespace COSC2100_A2_MaxDinsmore
         //        if (tile.getRingValue(i) == -1)
         //        {
         //            lastAccessedPiece[2] = i;
-        //            // Load copy of circle
+        //            // Load copy of circlePiece
         //            Dispatcher.Invoke(() =>
         //            {
 
