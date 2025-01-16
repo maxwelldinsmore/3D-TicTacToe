@@ -22,6 +22,7 @@ namespace COSC2100_A2_MaxDinsmore
         private int currentPlayerTurn; 
         private Random random = new Random();
         const int GameBorderThickness = 2;
+        const int PieceThickness = 10;
 
         public Game(int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
         {
@@ -87,6 +88,7 @@ namespace COSC2100_A2_MaxDinsmore
         }
         public void AddTile(Point tilePoint, int tileNumber)
         {
+            // ADD GAP BETWEEN PIECES TO GET PROPER SIZING
             Canvas canvasTile = new Canvas
             {
                 Width = TileLength,
@@ -96,19 +98,23 @@ namespace COSC2100_A2_MaxDinsmore
             };
             Canvas.SetLeft(canvasTile, tilePoint.X);
             Canvas.SetTop(canvasTile, tilePoint.Y);
-
+            double gapBetweenPieces = TileLength - PieceThickness * CirclesPerTile * 2;
+            double pieceSize = TileLength;
+            // Next smallest pieces width is 
             for (int i = 0; i < CirclesPerTile; i++)
             {
                 // Create a new circlePiece
                 Ellipse circlePiece = new Ellipse
                 {
-                    Width = TileLength / (i + 1),
-                    Height = TileLength / (i + 1),
+                    Width = TileLength / pieceSize,
+                    Height = TileLength / pieceSize,
                     Stroke = Brushes.Black,
-                    StrokeThickness = 10,
+                    StrokeThickness = PieceThickness,
                     Name = "piece_" + tileNumber + "_" + i,
                     Uid = "0" // 0 is empty, 1 is player 1, 2 is player 2, etc.
                 };
+                pieceSize -= gapBetweenPieces;
+
                 circlePiece.MouseDown += PieceClick;
                 // Set the position of the circlePiece
                 Canvas.SetLeft(circlePiece, tilePoint.X + (TileLength * (i / 3) ) );
