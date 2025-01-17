@@ -98,7 +98,8 @@ namespace COSC2100_A2_MaxDinsmore
             };
             Canvas.SetLeft(canvasTile, tilePoint.X);
             Canvas.SetTop(canvasTile, tilePoint.Y);
-            double gapBetweenPieces = TileLength - PieceThickness * CirclesPerTile * 2;
+            double gapBetweenPieces = (TileLength - PieceThickness * CirclesPerTile) / (CirclesPerTile + 1);
+
             double pieceSize = TileLength;
             // Next smallest pieces width is 
             for (int i = 0; i < CirclesPerTile; i++)
@@ -106,25 +107,24 @@ namespace COSC2100_A2_MaxDinsmore
                 // Create a new circlePiece
                 Ellipse circlePiece = new Ellipse // Fix this
                 {
-                    Width = TileLength / pieceSize,
-                    Height = TileLength / pieceSize,
+                    Width = pieceSize,
+                    Height = pieceSize,
                     Stroke = Brushes.Black,
                     StrokeThickness = PieceThickness,
                     Name = "piece_" + tileNumber + "_" + i,
                     Uid = "0" // 0 is empty, 1 is player 1, 2 is player 2, etc.
                 };
-                pieceSize -= gapBetweenPieces;
+                pieceSize -= gapBetweenPieces * 2;
 
                 circlePiece.MouseDown += PieceClick;
                 // Set the position of the circlePiece
-                Canvas.SetLeft(circlePiece, tilePoint.X + (TileLength * (i / 3) ) );
-                Canvas.SetTop(circlePiece, tilePoint.Y + (TileLength * (i / 3) ) );
+                Canvas.SetLeft(circlePiece, gapBetweenPieces * (i));
+                Canvas.SetTop(circlePiece, gapBetweenPieces * (i));
 
                 // Add the circlePiece to the canvas
                 canvasTile.Children.Add(circlePiece);
             }
             canvasGameBoard.Children.Add(canvasTile);
-
         }
 
         private void PieceClick(object sender, MouseButtonEventArgs e)
