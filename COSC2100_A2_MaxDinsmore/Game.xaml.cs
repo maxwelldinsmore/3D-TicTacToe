@@ -24,7 +24,7 @@ namespace COSC2100_A2_MaxDinsmore
         const int GameBorderThickness = 2;
         const int PieceThickness = 10;
 
-        public Game(int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
+        public Game(Player[] players, int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
         {
             BoardSize = gameBoardSize;
             PlayerCount = gamePlayerCount;
@@ -127,6 +127,11 @@ namespace COSC2100_A2_MaxDinsmore
             canvasGameBoard.Children.Add(canvasTile);
         }
 
+        /// <summary>
+        /// Controls the click event for the game pieces
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PieceClick(object sender, MouseButtonEventArgs e)
         {
             Ellipse clickedPiece = (Ellipse)sender;

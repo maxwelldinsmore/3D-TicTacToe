@@ -49,21 +49,57 @@ namespace COSC2100_A2_MaxDinsmore
 
         private void buttonStartGame_Click(object sender, RoutedEventArgs e)
         {
+            Player[] players = new Player[4];
             bool errorsFound = false;
             int playerCount;
             Int32.TryParse(playerCountTextBox.Text, out playerCount);
 
-
-            Player player = new Player(textBoxPlayer1.Text, new SolidColorBrush(clrPickerPlayer1.SelectedColor.Value));
-
-            if (playerCount == 2)
+            // First Player
+            if (textBoxPlayer1.Text != null)
             {
-
+                players[0] = new Player(textBoxPlayer1.Text, new SolidColorBrush(clrPickerPlayer1.SelectedColor.Value));
+            }
+            else
+            {
+                MessageBox.Show("Please enter a name for Player 1");
+                errorsFound = true;
+            }
+            // Second Player
+            if (textBoxPlayer2.Text != null)
+            {
+                players[1] = new Player(textBoxPlayer2.Text, new SolidColorBrush(clrPickerPlayer2.SelectedColor.Value));
+            }
+            else
+            {
+                MessageBox.Show("Please enter a name for Player 2");
+                errorsFound = true;
             }
 
+            // If third Player
+            if (playerCount > 2 && textBoxPlayer3.Text != null)
+            {
+                players[2] = new Player(textBoxPlayer3.Text, new SolidColorBrush(clrPickerPlayer3.SelectedColor.Value));
+            }
+            else
+            {
+                MessageBox.Show("Please enter a name for Player 3");
+                errorsFound = true;
+            }
+
+            // If fourth Player
+            if (playerCount == 4 && textBoxPlayer4.Text != null)
+            {
+                players[3] = new Player(textBoxPlayer4.Text, new SolidColorBrush(clrPickerPlayer4.SelectedColor.Value));
+
+            }
+            else
+            {
+                MessageBox.Show("Please enter a name for Player 4");
+                errorsFound = true;
+            }
             if (errorsFound == false)
             {
-                Game newGame = new Game();
+                Game newGame = new Game(players);
                 newGame.Closed += NewGame_Closed;
                 newGame.Show();
                 this.Hide();
