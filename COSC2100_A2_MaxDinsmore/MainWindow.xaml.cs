@@ -13,16 +13,6 @@ namespace COSC2100_A2_MaxDinsmore
     
     public partial class MainWindow : Window
     {
-        // variables
-        int gridSize;
-        public int playersTurn = 1;
-        Player[] players;
-        Tile[,] tiles;
-        int playerCount;
-        int[] lastAccessedPiece;
-        bool gameFinished = false;
-        Label playerTurnLabel;
-        
         
         public MainWindow()
         {
