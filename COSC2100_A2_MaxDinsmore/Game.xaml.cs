@@ -223,6 +223,14 @@ namespace COSC2100_A2_MaxDinsmore
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Used to resize game board when window is resized
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
 
+        }
     }
 }
