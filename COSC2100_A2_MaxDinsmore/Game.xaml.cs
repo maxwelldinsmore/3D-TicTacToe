@@ -15,18 +15,60 @@ namespace COSC2100_A2_MaxDinsmore
     {
         // Todo: Accomodate size of borders in calculations
         // Todo: declare constants
-        int BoardSize;
-        int PlayerCount;
-        int CirclesPerTile;
-        string BoardBackground = "Brown";
-        double TileLength;
-        private int currentPlayerTurn; 
-        private Random random = new Random();
+        // Constants for the game board, some are decided when the game is started 
+        // based on user choice in the main window
+
+        /// <summary>
+        /// Thickness of the game border grid
+        /// </summary>
         const int GameBorderThickness = 2;
+        /// <summary>
+        /// Thickness of the game pieces in pixels
+        /// </summary>
         const int PieceThickness = 10;
+        /// <summary>
+        /// Size of the game board
+        /// </summary>
+        int BoardSize;
+        /// <summary>
+        /// Number of players in the game
+        /// </summary>
+        int PlayerCount;
+        /// <summary>
+        /// Number of circles per tile
+        /// </summary>
+        int CirclesPerTile;
+        /// <summary>
+        /// Background color of the game board
+        /// </summary>
+        string BoardBackground = "Brown";
+        /// <summary>
+        /// Length of individual tiles which are using canvases
+        /// </summary>
+        double TileLength;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Player[] players;
+
+        ///
+        /// Variables for the game
+        /// 
+
+        /// <summary>
+        /// Current Players Turn
+        /// </summary>
+        private int currentPlayerTurn;
+        /// <summary>
+        /// Random number generator for deciding who goes first
+        /// </summary>
+        private Random random = new Random();
+        /// <summary>
+        /// Scoring info for the game used to store and check for wins
+        /// </summary>
         private int[,,] ScoringInfo;
 
-        public Game(Player[] players, int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
+        public Game(Player[] playerInfo, int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
         {
             BoardSize = gameBoardSize;
             PlayerCount = gamePlayerCount;
@@ -35,7 +77,7 @@ namespace COSC2100_A2_MaxDinsmore
             currentPlayerTurn = random.Next(0, PlayerCount);
             LoadGameBoard();
             int[,] boardInfo = new int[BoardSize, CirclesPerTile];
-            
+            players = playerInfo;
 
         }
 
@@ -79,7 +121,6 @@ namespace COSC2100_A2_MaxDinsmore
                     StrokeThickness = GameBorderThickness
                 });
             }
-            int tileNumber = 0;
             for (int x = 0; x < BoardSize; x++)
             {
                 for (int y = 0; y < BoardSize; y++)
@@ -88,13 +129,12 @@ namespace COSC2100_A2_MaxDinsmore
                         x * TileLength + (GameBorderThickness * x), 
                         y * TileLength + (GameBorderThickness * y)
                         );
-                    AddTile(currentTileLocation, tileNumber);
-                    tileNumber++;
+                    AddTile(currentTileLocation, x,y);
                 }
                    
             }
         }
-        public void AddTile(Point tilePoint, int tileNumber)
+        public void AddTile(Point tilePoint, int tileNumberX, int tileNumberY)
         {
             // ADD GAP BETWEEN PIECES TO GET PROPER SIZING
             Canvas canvasTile = new Canvas
@@ -119,7 +159,7 @@ namespace COSC2100_A2_MaxDinsmore
                     Height = pieceSize,
                     Stroke = Brushes.Black,
                     StrokeThickness = PieceThickness,
-                    Name = "piece_" + tileNumber + "_" + i,
+                    Name = "piece_" + tileNumberX + "_" + tileNumberY + "_" + i,
                     Uid = "0" // 0 is empty, 1 is player 1, 2 is player 2, etc.
                 };
                 pieceSize -= gapBetweenPieces * 2;
@@ -143,22 +183,44 @@ namespace COSC2100_A2_MaxDinsmore
         private void PieceClick(object sender, MouseButtonEventArgs e)
         {
             Ellipse clickedPiece = (Ellipse)sender;
-            Debug.WriteLine("Tile " + clickedPiece.Name.Split("_")[1]
-                + "\nPiece " + clickedPiece.Name.Split("_")[2]
+            Debug.WriteLine("TileX " + clickedPiece.Name.Split("_")[1] 
+                + "\nTileY " + clickedPiece.Name.Split("_")[2]
+                + "\nPiece " + clickedPiece.Name.Split("_")[3]
                 );
+            int tilePosX = int.Parse(clickedPiece.Name.Split("_")[1]);
+            int tilePosY = int.Parse(clickedPiece.Name.Split("_")[2]);
+            int piecePos = int.Parse(clickedPiece.Name.Split("_")[3]);
             // Tiles are top down, left to right, and pieces listed from biggest to smallest
             if (clickedPiece.Uid == "0")
             {
                 clickedPiece.Uid = (currentPlayerTurn + 1).ToString();
-                clickedPiece.Stroke = new SolidColorBrush((Color)ColorConverter.ConvertFromString("Red"));
+                clickedPiece.Stroke = players[currentPlayerTurn].playerColor;
                 currentPlayerTurn = (currentPlayerTurn + 1) % PlayerCount;
+                ScoringInfo[tilePosX, tilePosY, piecePos] = currentPlayerTurn;
+                //CheckForWin(ScoringInfo);
+                NextPlayerTurn();
             }
+
+
         }
 
-        private void UserClick(object sender, MouseButtonEventArgs e)
+        private void NextPlayerTurn()
         {
-            Point userClick = e.GetPosition(canvasGameBoard);
+            if (currentPlayerTurn + 1 == PlayerCount)
+            {
+                currentPlayerTurn = 0;
+            }
+            else
+            {
+                currentPlayerTurn++;
+            }
+            throw new NotImplementedException();
+        }
 
+        public void CheckForWin(int[,,] ScoringInfo)
+        {
+            // Check for win
+            throw new NotImplementedException();
         }
 
 

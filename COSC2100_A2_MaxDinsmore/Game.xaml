@@ -12,7 +12,7 @@
     <Grid>
         <Canvas x:Name="canvasGameBoard" HorizontalAlignment="Left" 
                 Height="430" VerticalAlignment="Center" Width="430" 
-                MouseLeftButtonDown="UserClick"/>
+        />
         <!-- Re add binding code to fix canvas as a square -->
 
     </Grid>

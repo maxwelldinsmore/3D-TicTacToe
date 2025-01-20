@@ -10,9 +10,9 @@ namespace COSC2100_A2_MaxDinsmore
 
     public class Player
     {
-        private Brush playerColor;
+        public Brush playerColor { get; }
         public int PlayerNumber;
-        string playerName;
+        public string playerName { get; }
         public int Wins { get; }
         public Player(string playerNameChoice, Brush colourChoice)
         {
