@@ -14,6 +14,7 @@ namespace COSC2100_A2_MaxDinsmore
     public partial class Game : Window
     {
         // Todo: Accomodate size of borders in calculations
+        // Todo: declare constants
         int BoardSize;
         int PlayerCount;
         int CirclesPerTile;
@@ -23,7 +24,7 @@ namespace COSC2100_A2_MaxDinsmore
         private Random random = new Random();
         const int GameBorderThickness = 2;
         const int PieceThickness = 10;
-        int[,,] ScoringInfo;
+        private int[,,] ScoringInfo;
 
         public Game(Player[] players, int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
         {
@@ -32,13 +33,19 @@ namespace COSC2100_A2_MaxDinsmore
             CirclesPerTile = gameCirclesPerTile;
             InitializeComponent();
             currentPlayerTurn = random.Next(0, PlayerCount);
-            CanvasRepaint();
+            LoadGameBoard();
             int[,] boardInfo = new int[BoardSize, CirclesPerTile];
             
 
         }
 
-        public void CanvasRepaint()
+        public void LoadGameBoard()
+        {
+            ScoringInfo = new int[BoardSize, BoardSize, CirclesPerTile];
+            ReloadGameBoard(ScoringInfo);
+        }
+
+        public void ReloadGameBoard(int[,,] ScoringInfo)
         {
             // Clear the canvas
             canvasGameBoard.Children.Clear();
