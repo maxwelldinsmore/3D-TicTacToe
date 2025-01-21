@@ -68,10 +68,10 @@ namespace COSC2100_A2_MaxDinsmore
         /// </summary>
         private int[,,] ScoringInfo;
 
-        public Game(Player[] playerInfo, int gameBoardSize = 3, int gamePlayerCount = 2, int gameCirclesPerTile = 3)
+        public Game(Player[] playerInfo, int gameBoardSize = 3, int gameCirclesPerTile = 3)
         {
             BoardSize = gameBoardSize;
-            PlayerCount = gamePlayerCount;
+            PlayerCount = playerInfo.Length;
             CirclesPerTile = gameCirclesPerTile;
             InitializeComponent();
             currentPlayerTurn = random.Next(0, PlayerCount);
@@ -194,7 +194,7 @@ namespace COSC2100_A2_MaxDinsmore
             if (clickedPiece.Uid == "0")
             {
                 clickedPiece.Uid = (currentPlayerTurn + 1).ToString();
-                clickedPiece.Stroke = players[currentPlayerTurn].playerColor;
+                clickedPiece.Stroke = players[currentPlayerTurn].PlayerColor;
                 currentPlayerTurn = (currentPlayerTurn + 1) % PlayerCount;
                 ScoringInfo[tilePosX, tilePosY, piecePos] = currentPlayerTurn;
                 //CheckForWin(ScoringInfo);
@@ -214,7 +214,6 @@ namespace COSC2100_A2_MaxDinsmore
             {
                 currentPlayerTurn++;
             }
-            throw new NotImplementedException();
         }
 
         public void CheckForWin(int[,,] ScoringInfo)
@@ -230,7 +229,12 @@ namespace COSC2100_A2_MaxDinsmore
         /// <param name="e"></param>
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            double value;
 
+            Double.TryParse(Game.ActualHeightProperty.ToString(), out value);
+            canvasGameBoard.Height = value;
+            canvasGameBoard.Width = canvasGameBoard.Height;
+            ReloadGameBoard(ScoringInfo);
         }
     }
 }

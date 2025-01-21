@@ -41,8 +41,7 @@ namespace COSC2100_A2_MaxDinsmore
         {
             Player[] players = new Player[4];
             bool errorsFound = false;
-            int playerCount;
-            Int32.TryParse(playerCountTextBox.Text, out playerCount);
+            int playerCount = (int)playerCountTextBox.Value;
 
             // First Player
             if (textBoxPlayer1.Text != null)
@@ -105,6 +104,8 @@ namespace COSC2100_A2_MaxDinsmore
         {
             if (playerCountTextBox.Value == 2)
             {
+
+
                 if (gridPlayer3Info != null) gridPlayer3Info.Visibility = Visibility.Hidden;
                 if (gridPlayer4Info != null) gridPlayer4Info.Visibility = Visibility.Hidden;
             }
