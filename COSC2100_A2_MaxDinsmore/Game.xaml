@@ -10,10 +10,16 @@
         MinHeight="400" MinWidth="600"
         >
     <Grid>
-        <Canvas x:Name="canvasGameBoard" HorizontalAlignment="Left" 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="canvasGameBoard" HorizontalAlignment="Left" Grid.Column="0"
                 Height="430" VerticalAlignment="Center" Width="430" 
                 MouseLeftButtonDown="UserClick"/>
         <!-- Re add binding code to fix canvas as a square -->
-
+        <Grid>
+            
+        </Grid>
     </Grid>
 </Window>
