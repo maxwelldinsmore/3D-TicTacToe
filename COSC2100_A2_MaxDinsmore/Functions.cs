@@ -37,35 +37,35 @@ namespace COSC2100_A2_MaxDinsmore
         /// <param name="gridSize"></param>
         /// <param name="placedPiece"></param>
         /// <returns></returns>
-        public static int[,] checkForWin(Tile[,] tiles, int gridSize, int[] placedPiece)
+        public static int[,] checkForWin(int[,,] scoringInfo, int gridSize, int[] placedPiece)
         {
             int[,] check = { { -3, -3, -3 }, {-3,-3,-3 }, { -3, -3, -3 } };
 
             // 3D orthogonal Check
-            if (check[0,0] != orthogonalChecks(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
+            if (check[0,0] != orthogonalChecks(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
             {
-                return orthogonalChecks(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+                return orthogonalChecks(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
 
 
             // 2D diagonal Checks
-            if (check[0,0] != checkFor2DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
+            if (check[0,0] != checkFor2DDiagonalWin(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
             {
-                return checkFor2DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+                return checkFor2DDiagonalWin(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
 
 
             // 3D Diagonal Checks
-            if (check[0,0] != checkFor3DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
+            if (check[0,0] != checkFor3DDiagonalWin(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize)[0,0])
             {
-                return checkFor3DDiagonalWin(tiles, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
+                return checkFor3DDiagonalWin(scoringInfo, placedPiece[0], placedPiece[1], placedPiece[2], gridSize);
             }
 
 
             // No one won
             return check;
         }
-        private static int[,] orthogonalChecks(Tile[,] tiles, int x, int y, int z, int gridSize)
+        private static int[,] orthogonalChecks(int[,,] scoringInfo, int x, int y, int z, int gridSize)
         {
             int[,] orthogonalCheck = { { -3, -3, -3 }, { -3, -3, -3 }, { -3, -3, -3 } };
             for (int i = -1; i< 2; i+=2)
@@ -73,17 +73,17 @@ namespace COSC2100_A2_MaxDinsmore
                 if (orthogonalCheck[0,0] == -3)
                 {
                     // X Change
-                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, i, 0, 0);
+                    orthogonalCheck = checkForAxis(scoringInfo, x, y, z, gridSize, i, 0, 0);
                 }
                 if (orthogonalCheck[0,0] == -3)
                 {
                     // Y Change
-                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, 0, i, 0);
+                    orthogonalCheck = checkForAxis(scoringInfo, x, y, z, gridSize, 0, i, 0);
                 }
                 if (orthogonalCheck[0,0] == -3)
                 {
                     // Z Change
-                    orthogonalCheck = checkForAxis(tiles, x, y, z, gridSize, 0, 0, i);
+                    orthogonalCheck = checkForAxis(scoringInfo, x, y, z, gridSize, 0, 0, i);
                 }
                 
             }
@@ -93,7 +93,7 @@ namespace COSC2100_A2_MaxDinsmore
         }
         
 
-        private static int[,] checkFor2DDiagonalWin(Tile[,] tiles, int x, int y, int z, int gridSize)
+        private static int[,] checkFor2DDiagonalWin(int[,,] scoringInfo, int x, int y, int z, int gridSize)
         {
             // Need +/+, +/-, -/+, -/- and 3 different times for YZ, ZX, YX
             // So can generalize the Axis change and then run 3 times for the different combinations
@@ -131,7 +131,7 @@ namespace COSC2100_A2_MaxDinsmore
                         }
 
                         // lines got too long so saved value in twoDimensionalCheck
-                        twoDimensionalCheck = checkForAxis(tiles, x, y, z, gridSize, axisMovement[0], axisMovement[1], axisMovement[2]);
+                        twoDimensionalCheck = checkForAxis(scoringInfo, x, y, z, gridSize, axisMovement[0], axisMovement[1], axisMovement[2]);
                         if (twoDimensionalCheck[0,0].ToString() != "-3")
                         {
                             return twoDimensionalCheck;
@@ -158,7 +158,7 @@ namespace COSC2100_A2_MaxDinsmore
 
 
 
-        private static int[,] checkFor3DDiagonalWin(Tile[,] tiles, int x, int y, int z, int gridSize)
+        private static int[,] checkFor3DDiagonalWin(int[,,] scoringInfo, int x, int y, int z, int gridSize)
         {
             // Need to check combinations of +- for all 3 axes
             // ---, -+-, -++, --+, +--, ++-, +-+, +++ 8 In total
@@ -171,7 +171,7 @@ namespace COSC2100_A2_MaxDinsmore
                 {
                     for (int k = -1; k < 2; k +=2)
                     {
-                        threeDimensionalCheck = checkForAxis(tiles, x, y, z, gridSize, i, j, k);
+                        threeDimensionalCheck = checkForAxis(scoringInfo, x, y, z, gridSize, i, j, k);
                         if (threeDimensionalCheck[0,0].ToString() != "-3")
                         {
                             return threeDimensionalCheck;
@@ -196,15 +196,15 @@ namespace COSC2100_A2_MaxDinsmore
         /// <param name="yChange"></param>
         /// <param name="zChange"></param>
         /// <returns></returns>
-        private static int[,] checkForAxis(Tile[,] tiles, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
+        private static int[,] checkForAxis(int[,,] scoringInfo, int x, int y, int z, int gridSize, int xChange, int yChange, int zChange)
         {
             // X & Y 
             //
             // Positive Change X and Y
             try
             {
-                if (tiles[x,y].getRingValue(z) == tiles[x + xChange , y + yChange].getRingValue(z + zChange) &&
-                    tiles[x,y].getRingValue(z) == tiles[x + xChange * 2 , y + yChange * 2].getRingValue(z + zChange * 2))
+                if (scoringInfo[x,y,z] == scoringInfo[x + xChange , y + yChange, z + zChange] &&
+                    scoringInfo[x, y, z] == scoringInfo[x + xChange * 2, y + yChange * 2, z + zChange * 2])
                 {
                     return new int[,] { { x, y, z }, { x + xChange, y + yChange, z + zChange }, { x + xChange * 2, y + yChange * 2, z + zChange * 2 } };
                 }
@@ -212,8 +212,8 @@ namespace COSC2100_A2_MaxDinsmore
             catch { }
             try
             {
-                if (tiles[x, y].getRingValue(z) == tiles[x + xChange, y + yChange].getRingValue(z + zChange) &&
-                    tiles[x, y].getRingValue(z) == tiles[x - xChange, y - yChange].getRingValue(z - zChange))
+                if (scoringInfo[x, y, z] == scoringInfo[x + xChange, y + yChange, z + zChange] &&
+                    scoringInfo[x, y, z] == scoringInfo[x - xChange, y - yChange, z - zChange])
                 {
                     return new int[,] { { x - xChange, y - yChange, z - zChange }, {x, y, z}, { x + xChange, y + yChange, z + zChange } };
                 }
